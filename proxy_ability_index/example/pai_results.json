@@ -1,0 +1,12 @@
+{
+  "n_units_with_realised": 100,
+  "spearman_pilot_cv_vs_realised": 0.921982964249467,
+  "spearman_pai_vs_realised": 0.8790665438579736,
+  "ranked_by": "pilot_cv_r2",
+  "base_rate_proxy_safe": 0.66,
+  "safe_threshold_on_realised": 0.95,
+  "precision_target": 0.95,
+  "tau": 0.932817482928721,
+  "frac_units_routed_to_proxy": 0.52,
+  "achieved_precision": 0.9615384615384616
+}

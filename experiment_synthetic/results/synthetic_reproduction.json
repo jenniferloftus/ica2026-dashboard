@@ -1,0 +1,510 @@
+{
+  "n_policies": 40000,
+  "seed": 20260728,
+  "paradox": {
+    "n": 40000,
+    "per_policy_r2": 0.663404263725647,
+    "per_policy_mae": 6043.020113682784,
+    "mae_pct_of_mean": 41.95845350036688,
+    "rmse_mae_ratio": 2.5267394607590536,
+    "aggregate_pct_error": -0.020032577828012498,
+    "aggregate_ci95": [
+      -1.1185299528762007,
+      1.0280670254347934
+    ],
+    "sizes": [
+      10,
+      15,
+      24,
+      37,
+      57,
+      89,
+      137,
+      212,
+      329,
+      508,
+      787,
+      1217,
+      1884,
+      2915,
+      4510,
+      6978,
+      10797,
+      16707,
+      25851,
+      40000
+    ],
+    "agg_curve": [
+      21.321414568655875,
+      20.27874128693086,
+      17.007697811127585,
+      13.458815386476612,
+      12.173139901311258,
+      8.657968490148319,
+      6.262294845758719,
+      4.3991304158541595,
+      4.975356552816255,
+      3.808754820882899,
+      3.1488934297875883,
+      2.5262167159680495,
+      2.099443440822148,
+      1.6346043401239911,
+      1.185800508862484,
+      1.1040696346501122,
+      0.6576633670649401,
+      0.5029617331364858,
+      0.34878137335691345,
+      0.020032577828012658
+    ]
+  },
+  "atlas_r2": {
+    "book|ev": {
+      "Ridge": 0.8113759416089442,
+      "Poly2-LSMC": 0.886000984230881,
+      "DecisionTree": 0.6008433538432958,
+      "RandomForest": 0.7713203019965895,
+      "GradBoost": 0.8130807623476096,
+      "NeuralNet-MLP": 0.84555686321711
+    },
+    "book|bel": {
+      "Ridge": 0.9982309277746576,
+      "Poly2-LSMC": 0.992715483444428,
+      "DecisionTree": 0.9857535433246619,
+      "RandomForest": 0.9877153889267866,
+      "GradBoost": 0.9407624307534986,
+      "NeuralNet-MLP": 0.9522641786489073
+    },
+    "book|scr": {
+      "Ridge": 0.5019520589431632,
+      "Poly2-LSMC": 0.6298409761361978,
+      "DecisionTree": 0.7847545292522087,
+      "RandomForest": 0.8724381542814945,
+      "GradBoost": 0.8887509829685561,
+      "NeuralNet-MLP": 0.3650012375844911
+    },
+    "ULSavings|ev": {
+      "Ridge": 0.9062742657699155,
+      "Poly2-LSMC": 0.946432053874083,
+      "DecisionTree": 0.7277231294358486,
+      "RandomForest": 0.8905143420112693,
+      "GradBoost": 0.8629230301993351,
+      "NeuralNet-MLP": 0.8216493270479435
+    },
+    "ULSavings|bel": {
+      "Ridge": 0.9998031162248954,
+      "Poly2-LSMC": 0.9939479902646022,
+      "DecisionTree": 0.9951722279286724,
+      "RandomForest": 0.9951351893854217,
+      "GradBoost": 0.9426730014185155,
+      "NeuralNet-MLP": 0.9507054286144205
+    },
+    "ULSavings|scr": {
+      "Ridge": 0.525230673015898,
+      "Poly2-LSMC": 0.6047641467922285,
+      "DecisionTree": 0.8651339849769552,
+      "RandomForest": 0.9417619167248619,
+      "GradBoost": 0.9270309123238007,
+      "NeuralNet-MLP": 0.3023305288774071
+    },
+    "Pension|ev": {
+      "Ridge": 0.8965456088172363,
+      "Poly2-LSMC": 0.9487708385721072,
+      "DecisionTree": 0.7914510066696621,
+      "RandomForest": 0.8348201611891821,
+      "GradBoost": 0.8437732769273406,
+      "NeuralNet-MLP": 0.8506640441543033
+    },
+    "Pension|bel": {
+      "Ridge": 0.9997476983641783,
+      "Poly2-LSMC": 0.9938660596710273,
+      "DecisionTree": 0.9948979431063397,
+      "RandomForest": 0.9949820433597647,
+      "GradBoost": 0.9433170993219998,
+      "NeuralNet-MLP": 0.9539562955260068
+    },
+    "Pension|scr": {
+      "Ridge": 0.4781688240010692,
+      "Poly2-LSMC": 0.5884161062280024,
+      "DecisionTree": 0.841785845081343,
+      "RandomForest": 0.8976280055331397,
+      "GradBoost": 0.9033705097948428,
+      "NeuralNet-MLP": 0.25943142389689655
+    },
+    "Protection|ev": {
+      "Ridge": 0.7236567991474874,
+      "Poly2-LSMC": 0.8157309613083108,
+      "DecisionTree": 0.5278337127491691,
+      "RandomForest": 0.755250521501188,
+      "GradBoost": 0.8835681259427975,
+      "NeuralNet-MLP": 0.8356967004799929
+    },
+    "Protection|bel": {
+      "Ridge": 0.7354690510681581,
+      "Poly2-LSMC": 0.8264994579487716,
+      "DecisionTree": 0.6757799710716874,
+      "RandomForest": 0.7774876140703317,
+      "GradBoost": 0.9085456135834448,
+      "NeuralNet-MLP": 0.8548020185612336
+    },
+    "Protection|scr": {
+      "Ridge": 0.5533195240131608,
+      "Poly2-LSMC": 0.7184454027339643,
+      "DecisionTree": 0.9062901046516054,
+      "RandomForest": 0.9196869601194078,
+      "GradBoost": 0.9192067059985549,
+      "NeuralNet-MLP": 0.9213281211259392
+    },
+    "InvestmentBond|ev": {
+      "Ridge": 0.9199827780296327,
+      "Poly2-LSMC": 0.9504614675727183,
+      "DecisionTree": 0.8303292886860145,
+      "RandomForest": 0.9165594688442473,
+      "GradBoost": 0.8818586808944163,
+      "NeuralNet-MLP": 0.847595784715362
+    },
+    "InvestmentBond|bel": {
+      "Ridge": 0.9998473950261552,
+      "Poly2-LSMC": 0.9940114818582984,
+      "DecisionTree": 0.9954239727894632,
+      "RandomForest": 0.9957628498199979,
+      "GradBoost": 0.9407621224561729,
+      "NeuralNet-MLP": 0.9502516933765142
+    },
+    "InvestmentBond|scr": {
+      "Ridge": 0.6296085424430126,
+      "Poly2-LSMC": 0.662370874800372,
+      "DecisionTree": 0.8440534811254636,
+      "RandomForest": 0.9102808082098626,
+      "GradBoost": 0.9234336508928934,
+      "NeuralNet-MLP": 0.4260478580821717
+    },
+    "ANN|ev": {
+      "Ridge": 0.7683073326410994,
+      "Poly2-LSMC": 0.8552244018934345,
+      "DecisionTree": 0.5820663272855731,
+      "RandomForest": 0.7536657658011445,
+      "GradBoost": 0.8248400348912553,
+      "NeuralNet-MLP": 0.8859586099150925
+    },
+    "ANN|bel": {
+      "Ridge": 0.9994904409193157,
+      "Poly2-LSMC": 0.9937085111430022,
+      "DecisionTree": 0.9936084574397808,
+      "RandomForest": 0.99384366457671,
+      "GradBoost": 0.9414411211781469,
+      "NeuralNet-MLP": 0.9540583661560912
+    },
+    "ANN|scr": {
+      "Ridge": 0.6241493537079449,
+      "Poly2-LSMC": 0.7201301123419672,
+      "DecisionTree": 0.7420347975781841,
+      "RandomForest": 0.8409728134242341,
+      "GradBoost": 0.8707562740779269,
+      "NeuralNet-MLP": 0.3572515196988927
+    }
+  },
+  "atlas_tail": {
+    "book|ev": {
+      "Ridge": 12.30921931267314,
+      "Poly2-LSMC": 7.704241503851322,
+      "DecisionTree": 38.44155963928433,
+      "RandomForest": 20.733065202586953,
+      "GradBoost": 21.030346634798267,
+      "NeuralNet-MLP": 8.493704419803104
+    },
+    "book|bel": {
+      "Ridge": 1.2639611169773406,
+      "Poly2-LSMC": 2.1450919324494313,
+      "DecisionTree": 5.992183845160345,
+      "RandomForest": 4.4198849751208895,
+      "GradBoost": 8.048755932526008,
+      "NeuralNet-MLP": 13.731736292089654
+    },
+    "book|scr": {
+      "Ridge": 48.511894114754334,
+      "Poly2-LSMC": 37.33411512657541,
+      "DecisionTree": 36.86426668479858,
+      "RandomForest": 24.069775168580044,
+      "GradBoost": 23.684543679859374,
+      "NeuralNet-MLP": 36.04182079762864
+    },
+    "ULSavings|ev": {
+      "Ridge": 15.015948953263244,
+      "Poly2-LSMC": 8.961909752041004,
+      "DecisionTree": 62.73169594074766,
+      "RandomForest": 42.79248477510154,
+      "GradBoost": 26.632265239732757,
+      "NeuralNet-MLP": 31.922994703708355
+    },
+    "ULSavings|bel": {
+      "Ridge": 0.4962956172098483,
+      "Poly2-LSMC": 2.5465873647216513,
+      "DecisionTree": 2.5944032054651567,
+      "RandomForest": 3.2449179341775114,
+      "GradBoost": 7.994089538669525,
+      "NeuralNet-MLP": 14.73090562150004
+    },
+    "ULSavings|scr": {
+      "Ridge": 44.20577723877186,
+      "Poly2-LSMC": 59.930672749933386,
+      "DecisionTree": 29.337068048565488,
+      "RandomForest": 29.32250170823267,
+      "GradBoost": 27.530833874634585,
+      "NeuralNet-MLP": 58.7128394016321
+    },
+    "Pension|ev": {
+      "Ridge": 21.635763995657765,
+      "Poly2-LSMC": 9.09208092876913,
+      "DecisionTree": 70.9972888150257,
+      "RandomForest": 35.80601421471489,
+      "GradBoost": 28.566627991564328,
+      "NeuralNet-MLP": 26.46288114630019
+    },
+    "Pension|bel": {
+      "Ridge": 0.6739607281414569,
+      "Poly2-LSMC": 2.5079339528475453,
+      "DecisionTree": 2.757975388482578,
+      "RandomForest": 3.3233061872608753,
+      "GradBoost": 8.12064085232188,
+      "NeuralNet-MLP": 14.97788988091502
+    },
+    "Pension|scr": {
+      "Ridge": 44.43298428349714,
+      "Poly2-LSMC": 55.06032249974434,
+      "DecisionTree": 54.31362072320752,
+      "RandomForest": 25.286521620963615,
+      "GradBoost": 31.215754391774457,
+      "NeuralNet-MLP": 52.611577595282505
+    },
+    "Protection|ev": {
+      "Ridge": 10.60632815518853,
+      "Poly2-LSMC": 6.338848587761856,
+      "DecisionTree": 19.299242263487432,
+      "RandomForest": 21.345207130866896,
+      "GradBoost": 10.89887207644135,
+      "NeuralNet-MLP": 9.251794159308503
+    },
+    "Protection|bel": {
+      "Ridge": 14.675120889818178,
+      "Poly2-LSMC": 10.551359191352807,
+      "DecisionTree": 40.55237967545952,
+      "RandomForest": 40.98490530592134,
+      "GradBoost": 17.065732919170486,
+      "NeuralNet-MLP": 19.674167691543712
+    },
+    "Protection|scr": {
+      "Ridge": 288.26484463405797,
+      "Poly2-LSMC": 243.2566368828588,
+      "DecisionTree": 69.54467081416371,
+      "RandomForest": 90.82422409119039,
+      "GradBoost": 20.013381628861765,
+      "NeuralNet-MLP": 102.97931328486173
+    },
+    "InvestmentBond|ev": {
+      "Ridge": 11.714277814940658,
+      "Poly2-LSMC": 8.433766583461162,
+      "DecisionTree": 47.96221720231742,
+      "RandomForest": 31.979735812528695,
+      "GradBoost": 23.683139956732266,
+      "NeuralNet-MLP": 31.189675307697676
+    },
+    "InvestmentBond|bel": {
+      "Ridge": 0.44881558495067236,
+      "Poly2-LSMC": 2.703992959275039,
+      "DecisionTree": 2.4398489278038027,
+      "RandomForest": 3.0499244155113376,
+      "GradBoost": 8.896629944585275,
+      "NeuralNet-MLP": 15.884516864288438
+    },
+    "InvestmentBond|scr": {
+      "Ridge": 42.02136105609217,
+      "Poly2-LSMC": 51.701704699921564,
+      "DecisionTree": 31.129698003467883,
+      "RandomForest": 31.83766839431249,
+      "GradBoost": 27.907922937213577,
+      "NeuralNet-MLP": 55.09321088582124
+    },
+    "ANN|ev": {
+      "Ridge": 11.039446147043755,
+      "Poly2-LSMC": 7.499669957126956,
+      "DecisionTree": 23.651554132211015,
+      "RandomForest": 18.126624142370762,
+      "GradBoost": 18.882711847352144,
+      "NeuralNet-MLP": 8.031581059201335
+    },
+    "ANN|bel": {
+      "Ridge": 0.34387988007348963,
+      "Poly2-LSMC": 1.2752119602838135,
+      "DecisionTree": 1.6136848321854587,
+      "RandomForest": 1.9367891464238218,
+      "GradBoost": 3.451860267873506,
+      "NeuralNet-MLP": 5.4610456851097915
+    },
+    "ANN|scr": {
+      "Ridge": 39.00534500289733,
+      "Poly2-LSMC": 33.83387069075615,
+      "DecisionTree": 44.33151878372784,
+      "RandomForest": 22.80106231985621,
+      "GradBoost": 19.527568024452112,
+      "NeuralNet-MLP": 45.5030039695211
+    }
+  },
+  "atlas_book": {
+    "ev": {
+      "best_r2": 0.886000984230881,
+      "best_model": "Poly2-LSMC",
+      "best_tail": 7.704241503851322,
+      "white_r2": 0.886000984230881,
+      "black_r2": 0.8130807623476096
+    },
+    "bel": {
+      "best_r2": 0.9982309277746576,
+      "best_model": "Ridge",
+      "best_tail": 1.2639611169773406,
+      "white_r2": 0.9982309277746576,
+      "black_r2": 0.9877153889267866
+    },
+    "scr": {
+      "best_r2": 0.8887509829685561,
+      "best_model": "GradBoost",
+      "best_tail": 23.684543679859374,
+      "white_r2": 0.6298409761361978,
+      "black_r2": 0.8887509829685561
+    }
+  },
+  "pai": {
+    "n_units": 15,
+    "pooled_spearman": 0.6714285714285713,
+    "note": "pooled rho reflects between-metric ordering; units are non-independent (3 blocks x 5 families)",
+    "within_metric_spearman": {
+      "ev": -0.19999999999999998,
+      "bel": 0.09999999999999999,
+      "scr": 0.19999999999999998
+    },
+    "within_metric_mean": 0.03333333333333333,
+    "block_permutation_p": 0.09038192361527694,
+    "loo_mae": 0.0264162997529362,
+    "table": [
+      {
+        "unit": "ULSavings|ev",
+        "curvature": 0.0912,
+        "tail_kurtosis": 32.9088,
+        "eff_dim": 1.461,
+        "PAI": 0.148,
+        "realised_r2": 0.9464
+      },
+      {
+        "unit": "ULSavings|bel",
+        "curvature": 0.0009,
+        "tail_kurtosis": 45.7037,
+        "eff_dim": 1.0,
+        "PAI": 4.2451,
+        "realised_r2": 0.9998
+      },
+      {
+        "unit": "ULSavings|scr",
+        "curvature": 0.2096,
+        "tail_kurtosis": 37.7486,
+        "eff_dim": 1.7645,
+        "PAI": -2.1362,
+        "realised_r2": 0.9418
+      },
+      {
+        "unit": "Pension|ev",
+        "curvature": 0.0773,
+        "tail_kurtosis": 42.1366,
+        "eff_dim": 1.3918,
+        "PAI": 0.0185,
+        "realised_r2": 0.9488
+      },
+      {
+        "unit": "Pension|bel",
+        "curvature": 0.0011,
+        "tail_kurtosis": 42.598,
+        "eff_dim": 1.0,
+        "PAI": 4.3046,
+        "realised_r2": 0.9997
+      },
+      {
+        "unit": "Pension|scr",
+        "curvature": 0.2253,
+        "tail_kurtosis": 37.2514,
+        "eff_dim": 1.8393,
+        "PAI": -2.6437,
+        "realised_r2": 0.9034
+      },
+      {
+        "unit": "Protection|ev",
+        "curvature": 0.14,
+        "tail_kurtosis": 33.0725,
+        "eff_dim": 1.4021,
+        "PAI": -0.2507,
+        "realised_r2": 0.8836
+      },
+      {
+        "unit": "Protection|bel",
+        "curvature": 0.1428,
+        "tail_kurtosis": 47.1862,
+        "eff_dim": 1.3538,
+        "PAI": -0.3213,
+        "realised_r2": 0.9085
+      },
+      {
+        "unit": "Protection|scr",
+        "curvature": 0.1865,
+        "tail_kurtosis": 114.5981,
+        "eff_dim": 1.0334,
+        "PAI": 0.3139,
+        "realised_r2": 0.9213
+      },
+      {
+        "unit": "InvestmentBond|ev",
+        "curvature": 0.0827,
+        "tail_kurtosis": 151.6081,
+        "eff_dim": 1.4372,
+        "PAI": -1.893,
+        "realised_r2": 0.9505
+      },
+      {
+        "unit": "InvestmentBond|bel",
+        "curvature": 0.0006,
+        "tail_kurtosis": 168.6661,
+        "eff_dim": 1.0,
+        "PAI": 1.726,
+        "realised_r2": 0.9998
+      },
+      {
+        "unit": "InvestmentBond|scr",
+        "curvature": 0.2258,
+        "tail_kurtosis": 136.043,
+        "eff_dim": 1.6764,
+        "PAI": -4.0509,
+        "realised_r2": 0.9234
+      },
+      {
+        "unit": "ANN|ev",
+        "curvature": 0.1253,
+        "tail_kurtosis": 42.1202,
+        "eff_dim": 1.4049,
+        "PAI": -0.6263,
+        "realised_r2": 0.886
+      },
+      {
+        "unit": "ANN|bel",
+        "curvature": 0.0011,
+        "tail_kurtosis": 44.1865,
+        "eff_dim": 1.0,
+        "PAI": 4.2653,
+        "realised_r2": 0.9995
+      },
+      {
+        "unit": "ANN|scr",
+        "curvature": 0.1542,
+        "tail_kurtosis": 29.048,
+        "eff_dim": 2.1867,
+        "PAI": -3.0994,
+        "realised_r2": 0.8708
+      }
+    ]
+  }
+}
