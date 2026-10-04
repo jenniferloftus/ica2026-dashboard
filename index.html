@@ -1022,7 +1022,10 @@ const GLOSSARY = {
   "HGB": "Histogram Gradient Boosting: scikit-learn's fast gradient-boosted Decision Trees (a tree ensemble).",
   "MLP": "Multilayer Perceptron: a feed-forward Neural Network.",
   "VIF": "Value of In-Force: PVFP less the cost of holding required capital (and, under MCEV, further deductions). Not modelled here: every proxy targets PVFP.",
-  "conformal": "Split-Conformal Prediction: intervals whose coverage rate is guaranteed in finite samples, without distributional assumptions.",
+  "conformal": "Split-Conformal Prediction: intervals whose coverage rate is guaranteed on average in finite samples, without distributional assumptions, provided new cases resemble the data used to calibrate them.",
+  "lever": "An assumption varied across the heavy-model runs: the investment market level, lapse, risk-benefit claims, maintenance expense and expense inflation. A scenario is one run at one set of lever values.",
+  "design effect": "The variance of a total allowing for errors that move together within a group (here a product code), divided by the variance assuming independent errors. Above 1, errors are correlated within products.",
+  "early stopping": "Halting training when the error on withheld validation data stops falling. For Gradient Boosting on the per-policy data, the withheld data are a random tenth of the policies, chosen by the seed.",
   "DTA": "Decreasing Term Assurance: life cover whose sum assured runs down over the term, typically alongside a mortgage.",
   "ARF": "Approved Retirement Fund: an Irish post-retirement drawdown fund.",
   "PRSA": "Personal Retirement Savings Account: an Irish personal pension contract.",
@@ -1062,7 +1065,10 @@ const GLOSS_DISPLAY = {
   "conformal": "Conformal Prediction",
   "reconciliation": "Reconciliation",
   "standard formula": "Standard Formula",
-  "p99": "P99"
+  "p99": "P99",
+  "lever": "Lever",
+  "design effect": "Design Effect",
+  "early stopping": "Early Stopping"
 };
 function GlossaryCard() {
   const keys = Object.keys(GLOSSARY).filter((k) => !/^[A-Z][a-z]+-box$/.test(k) && k !== "glassbox" && k !== "SII" && k !== "Proxy-Ability Index");
@@ -1250,7 +1256,7 @@ function Overview() {
     },
     /* @__PURE__ */ React.createElement(Ladder, null),
     /* @__PURE__ */ React.createElement("div", { className: "note", style: { marginTop: 4 } }, "The cancellation relies on the errors being ", /* @__PURE__ */ React.createElement("b", null, "balanced"), " (condition 1, \xA75.1.1): biases in different parts of the portfolio can offset on today's mix, so a material mix shift is a retraining trigger for monitoring.")
-  ), /* @__PURE__ */ React.createElement(Card, { title: "One-Line Takeaways" }, /* @__PURE__ */ React.createElement("ol", { className: "tkr", style: { fontSize: 13 } }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Large errors per policy, a small error on the portfolio total"), " \u2014 the cancellation held across all 11 SII stresses, and Proposition 5.1 states when it can be relied on. A Neural Network was the counter-case: best per policy, worst on the portfolio total, through a bias that did not shrink with portfolio size (\xA75.1, \xA75.11)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Error fell by reporting level"), " \u2014 the same proxy missed by 26% per policy, about 2% per product code (value-weighted median over the 36 codes holding 93% of value; about 2\xD7 what independent errors would give) and 0.04% for the portfolio (\xA75.1)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "In-force smooth metrics held; new-business value and market-stress capital did not"), " \u2014 frozen proxies held PVFP within \xB10.7% and BEL within \xB11% over two real quarters, while the new-business proxy missed by 8.3% after one quarter, market-stress charges broke and the interest charge's biting direction flipped \u2192 ", /* @__PURE__ */ React.createElement("b", null, "recalibration cadence must be stress-specific"), ", and new-business proxies are refitted each cohort, which reduced Gradient Boosting's next-quarter miss from 11.5% to 3.8% (\xA75.6, \xA75.9)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Geometry and data budget decided the class"), " \u2014 at pilot budgets a smooth learner was the most accurate on the smooth aggregates \u2013 tuned LSMC missed BEL by 1.1% on unseen scenarios (R\xB2 0.996, tied by a Gaussian Process) against 12% for Gradient Boosting; Gradient Boosting led the heterogeneous per-policy capital target, RMSE 15% of the average policy value against 34% (R\xB2 0.982 against 0.909) (\xA75.2)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Predict, then diagnose"), " \u2014 a 16-run pilot's own cross-validation ranked which units (BEL product codes) a proxy could carry on runs it had never seen (\u03C1 0.92); the Proxy-Ability Index nearly matched it (\u03C1 0.88) and said why (\xA75.3)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "A non-uniform assumption change needed the heavy model"), " \u2014 proxies trained on uniform levers missed non-uniform basis changes by 2\u2013100% of the true change (median 59%), and could answer one only when each policy's inputs captured it (\xA75.12)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "The portfolio total hid what happened by product line"), " \u2014 allocating a pooled proxy on a planning mix produced a median error of 8% to 14% on the larger in-force product lines, against under 1% for each line's own proxy (\xA75.9.1)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "An adoption matrix"), " \u2014 each use gets a model class, a control, a refresh cadence and a validity boundary, and the heavy model stays for non-uniform basis changes, new products and market states outside the trained one (\xA76).")))), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, /* @__PURE__ */ React.createElement(
+  ), /* @__PURE__ */ React.createElement(Card, { title: "One-Line Takeaways" }, /* @__PURE__ */ React.createElement("ol", { className: "tkr", style: { fontSize: 13 } }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Large errors per policy, a small error on the portfolio total"), " \u2014 the cancellation held across all 11 SII stresses, and Proposition 5.1 states when it can be relied on. A Neural Network was the counter-case: best per policy, worst on the portfolio total, through a bias that did not shrink with portfolio size (\xA75.1, \xA75.11)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Error fell by reporting level"), " \u2014 the same proxy missed by 26% per policy, about 2% per product code (value-weighted median over the 36 codes holding 93% of value; about 2\xD7 what independent errors would give) and 0.04% for the portfolio (\xA75.1)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "In-force smooth metrics held; new-business value and market-stress capital did not"), " \u2014 frozen proxies held PVFP within \xB10.7% and BEL within \xB11% over two real quarters, while the new-business proxy missed by 8.3% after one quarter, market-stress charges broke and the interest charge's biting direction flipped \u2192 ", /* @__PURE__ */ React.createElement("b", null, "recalibration cadence must be stress-specific"), ", and new-business proxies are refitted each cohort, which reduced Gradient Boosting's next-quarter miss from 11.5% to 3.8% (\xA75.6, \xA75.9)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Geometry and data budget decided the class"), " \u2014 at pilot budgets a smooth learner was the most accurate on the smooth aggregates \u2013 tuned LSMC missed BEL by 1.1% on unseen scenarios (R\xB2 0.996, tied by a Gaussian Process) against 12% for Gradient Boosting; Gradient Boosting led the heterogeneous per-policy capital target, RMSE 15% of the average policy value against 34% (R\xB2 0.982 against 0.909) (\xA75.2)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Predict, then diagnose"), " \u2014 a 16-run pilot's own cross-validation ranked which units (BEL product codes) a proxy could carry on runs it had never seen (\u03C1 0.92); the Proxy-Ability Index nearly matched it (\u03C1 0.88) and said why (\xA75.3)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "A non-uniform assumption change needed the heavy model"), " \u2014 proxies trained on uniform levers missed non-uniform basis changes by 2\u2013100% of the true change (median 59%), and could answer one only when each policy's inputs captured it (\xA75.12)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "The portfolio total hid what happened by product line"), " \u2014 allocating a pooled proxy on a planning mix produced a median error of 10% to 14% on the larger in-force product lines, against under 1% for each line's own proxy (\xA75.9.1)."), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "An adoption matrix"), " \u2014 each use gets a model class, a control, a refresh cadence and a validity boundary, and the heavy model stays for non-uniform basis changes, new products and market states outside the trained one (\xA76).")))), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, /* @__PURE__ */ React.createElement(
     Card,
     {
       title: "Every Actuarial Projection Tested",
@@ -1824,7 +1830,7 @@ function Governance() {
       note: "By function, with the evidence and the boundary for each. That proxies lead to better business decisions is an inference, not a measured result: a proxy outside its validity boundary produces confident errors faster than the heavy model produces careful answers (paper \xA76.1)."
     },
     /* @__PURE__ */ React.createElement("table", { className: "dt", style: { fontSize: 12.5 } }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", null, "Function"), /* @__PURE__ */ React.createElement("th", null, "Business Insight"), /* @__PURE__ */ React.createElement("th", null, "Evidence in This Study and Boundary"))), /* @__PURE__ */ React.createElement("tbody", null, T62.map((r, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, /* @__PURE__ */ React.createElement("td", { style: { fontWeight: 600 } }, r[0]), /* @__PURE__ */ React.createElement("td", null, r[1]), /* @__PURE__ */ React.createElement("td", { style: { color: "var(--muted)" } }, r[2])))))
-  ), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, /* @__PURE__ */ React.createElement(Card, { title: "Seven Evidence-Led Principles" }, /* @__PURE__ */ React.createElement("table", { className: "dt", style: { fontSize: 12 } }, /* @__PURE__ */ React.createElement("tbody", null, GPRIN.map((p, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, /* @__PURE__ */ React.createElement("td", { style: { fontWeight: 700, color: "var(--navy)", width: 34 } }, p[0]), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("b", null, gloss(p[1])), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--muted)", marginTop: 2 } }, gloss(p[2])))))))), /* @__PURE__ */ React.createElement(Card, { title: "Adoption Workflow \u2014 Proxy-Ability Triage" }, /* @__PURE__ */ React.createElement("ol", { className: "tkr", style: { fontSize: 12.5, lineHeight: 1.5 } }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Pilot"), " \u2014 about 16 heavy runs over the driver ranges for a whole-portfolio proxy, nearer 24 at product level (\xA75.4)"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Triage"), " \u2014 rank units by the pilot's own cross-validation; the PAI (curvature + tail-kurtosis) explains the hard ones; low scores \u2192 more runs or keep on heavy model"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Select"), " \u2014 class by geometry and data budget: smooth at pilot budgets \u2192 LSMC/Ridge Linear Regression (a Gaussian Process tied on BEL and outperformed it on PVFP); kinked or heterogeneous with rows \u2192 tree ensemble; hard auditability \u2192 EBM"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Validate"), " \u2014 aggregate reconciliation vs tolerance, with a cluster-robust interval at the reporting granularity; balance enforced on any neural proxy; SHAP recovers known sensitivities"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Gate"), " \u2014 split-conformal intervals; route widest 1\u20132% to the heavy model; disclose coverage"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Bound"), " \u2014 document validity boundary: product mix + market state + horizon"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Sign-off"), " \u2014 four-eyes; register the proxy as a model with its boundary and cadence")), /* @__PURE__ */ React.createElement("div", { className: "note", style: { marginTop: 6 } }, "The sharpest rule the data supports: recalibration cadence should be ", /* @__PURE__ */ React.createElement("b", null, "stress-specific"), "; here, capital-monitoring cadence was set by the market/rate stresses \u2014 not by the well-behaved central and demographic metrics."))), /* @__PURE__ */ React.createElement("div", { className: "note", style: { marginTop: 8 } }, "The extended matrix, with per-policy validation stances and evidence links, is available from the author on request (paper \xA76)."));
+  ), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, /* @__PURE__ */ React.createElement(Card, { title: "Seven Evidence-Led Principles" }, /* @__PURE__ */ React.createElement("table", { className: "dt", style: { fontSize: 12 } }, /* @__PURE__ */ React.createElement("tbody", null, GPRIN.map((p, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, /* @__PURE__ */ React.createElement("td", { style: { fontWeight: 700, color: "var(--navy)", width: 34 } }, p[0]), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("b", null, gloss(p[1])), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--muted)", marginTop: 2 } }, gloss(p[2])))))))), /* @__PURE__ */ React.createElement(Card, { title: "Adoption Workflow \u2014 Proxy-Ability Triage" }, /* @__PURE__ */ React.createElement("ol", { className: "tkr", style: { fontSize: 12.5, lineHeight: 1.5 } }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Pilot"), " \u2014 about 16 heavy runs over the driver ranges for a whole-portfolio proxy, and no more at product level (\xA75.4)"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Triage"), " \u2014 rank units by the pilot's own cross-validation; the PAI (curvature + tail-kurtosis) explains the hard ones; low scores \u2192 more runs or keep on heavy model"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Select"), " \u2014 class by geometry and data budget: smooth at pilot budgets \u2192 LSMC/Ridge Linear Regression (a Gaussian Process tied on BEL and outperformed it on PVFP); kinked or heterogeneous with rows \u2192 tree ensemble; hard auditability \u2192 EBM"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Validate"), " \u2014 aggregate reconciliation vs tolerance, with a cluster-robust interval at the reporting granularity; balance enforced on any neural proxy; SHAP recovers known sensitivities"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Gate"), " \u2014 split-conformal intervals; route widest 1\u20132% to the heavy model; disclose coverage"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Bound"), " \u2014 document validity boundary: product mix + market state + horizon"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Sign-off"), " \u2014 four-eyes; register the proxy as a model with its boundary and cadence")), /* @__PURE__ */ React.createElement("div", { className: "note", style: { marginTop: 6 } }, "The sharpest rule the data supports: recalibration cadence should be ", /* @__PURE__ */ React.createElement("b", null, "stress-specific"), "; here, capital-monitoring cadence was set by the market/rate stresses \u2014 not by the well-behaved central and demographic metrics."))), /* @__PURE__ */ React.createElement("div", { className: "note", style: { marginTop: 8 } }, "The extended matrix, with per-policy validation stances and evidence links, is available from the author on request (paper \xA76)."));
 }
 function PaperFigures() {
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(
@@ -1894,6 +1900,101 @@ function PvfpPortfolio() {
       note: "Each point is a product code: its mean out-of-fold error less the portfolio's, as a share of the average policy value, against its share of the portfolio's policies (log scale). The shaded funnel is where 95% of products would fall if errors were independent. Gradient Boosting's design effect was 2.95, which widened the honest interval on the portfolio total from \xB10.56% to \xB10.95%; Ridge Linear Regression's product-code terms nearly balanced each large product (0.07); the Neural Network's was 4.39 (paper \xA75.1.1)."
     },
     /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/error_correlation_funnel.png"], alt: "Three funnel plots of each product's mean error against its share of the portfolio, for Ridge Linear Regression, Gradient Boosting and a Neural Network", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })
+  )));
+}
+const FT_BALANCE = [
+  { d: "One pooled proxy (the paper)", mae: "26.5%", code: "2.2%", deff: "2.95", tot: "+0.04%" },
+  { d: "Pooled, each product code's mean error removed", mae: "26.6%", code: "0.45%", deff: "0.21", tot: "+0.10%" },
+  { d: "One proxy per product family", mae: "23.1%", code: "0.69%", deff: "0.63", tot: "+0.07%" }
+];
+const FT_SEEDS = [
+  { t: "PVFP", s: "\u22120.06% to +0.06%", a: "+0.01%", n: "\u22120.02%" },
+  { t: "BEL", s: "\u22120.12% to +0.18%", a: "+0.06%", n: "+0.17%" },
+  { t: "Mortality", s: "\u22120.29% to +0.45%", a: "+0.13%", n: "+0.14%" },
+  { t: "Morbidity", s: "\u22120.43% to +1.26%", a: "+0.24%", n: "+0.31%" },
+  { t: "Lapse (down)", s: "\u22120.61% to +1.92%", a: "+0.57%", n: "+0.89%" },
+  { t: "Lapse (up)", s: "\u22120.87% to +0.87%", a: "\u22120.03%", n: "\u22120.40%" },
+  { t: "Equity", s: "\u22120.71% to \u22120.21%", a: "\u22120.45%", n: "\u22120.41%" },
+  { t: "Currency", s: "\u22120.56% to +0.11%", a: "\u22120.21%", n: "\u22120.44%" },
+  { t: "Interest (up)", s: "\u22122.79% to +2.19%", a: "\u22120.12%", n: "\u22120.99%" },
+  { t: "Interest (down)", s: "\u22121.83% to +1.79%", a: "\u22120.24%", n: "\u22120.08%" },
+  { t: "Spread", s: "\u22120.50% to +0.52%", a: "+0.10%", n: "\u22120.18%" },
+  { t: "Expense", s: "\u22120.06% to +0.09%", a: "+0.03%", n: "+0.01%" },
+  { t: "Catastrophe", s: "\u22120.13% to +0.37%", a: "+0.12%", n: "\u22120.03%" }
+];
+const FT_PRIOR = [
+  { m: "Year-end proxy, unchanged (the \xA75.6 design)", tot: "\u22120.09%", pt: "0.39%", mae: "22.5%", r2: "0.880" },
+  { m: "Proxy refitted at Q1", tot: "\u22120.32%", pt: "0.50%", mae: "20.9%", r2: "0.890" },
+  { m: "Q1 heavy-model value carried forward", tot: "\u22124.82%", pt: "5.5%", mae: "7.8%", r2: "0.961" },
+  { m: "Proxy with the earlier values as inputs", tot: "\u22125.13%", pt: "4.1%", mae: "9.5%", r2: "0.938" },
+  { m: "Change since Q1, predicted and added to the Q1 value", tot: "\u22125.26%", pt: "5.0%", mae: "8.2%", r2: "0.960" },
+  { m: "Change model, scaled to the year-end proxy's product-type totals", tot: "\u22120.09%", pt: "0.39%", mae: "6.1%", r2: "0.963" }
+];
+const FT_SAMPLE = [
+  { f: "1%", sel: "Stratified by product code", m: "1.8%", rg: "\u22124.15% to +2.61%", code: "11.2%", mae: "54.6%" },
+  { f: "2%", sel: "Stratified by product code", m: "1.7%", rg: "\u22122.91% to +2.19%", code: "7.7%", mae: "47.0%" },
+  { f: "5%", sel: "Stratified by product code", m: "2.9%", rg: "\u22123.59% to +3.76%", code: "5.4%", mae: "37.4%" },
+  { f: "10%", sel: "Stratified by product code", m: "0.4%", rg: "\u22120.12% to +1.09%", code: "2.6%", mae: "30.9%" },
+  { f: "25%", sel: "Stratified by product code", m: "0.5%", rg: "\u22120.66% to +0.72%", code: "2.0%", mae: "28.7%" },
+  { f: "1%", sel: "Random", m: "5.7%", rg: "\u22126.99% to +14.16%", code: "11.3%", mae: "55.4%" },
+  { f: "10%", sel: "Random", m: "0.8%", rg: "\u22121.46% to +1.23%", code: "3.7%", mae: "31.9%" },
+  { f: "1%", sel: "Representative (k-means)", m: "12.5%", rg: "+11.78% to +13.18%", code: "12.0%", mae: "62.9%" },
+  { f: "10%", sel: "Representative (k-means)", m: "1.3%", rg: "+1.00% to +1.67%", code: "3.0%", mae: "30.2%" }
+];
+const FT_DATA = [
+  { e: "Annual premium twelve times too large (frequency slip)", tot: "+17.6", code: "+13.1", mae: "+16.9" },
+  { e: "Fund value ten times too large (decimal slip)", tot: "+9.3", code: "+4.9", mae: "+8.5" },
+  { e: "Fund value zero", tot: "\u22121.9", code: "+0.1", mae: "+1.2" },
+  { e: "Fund value missing", tot: "\u22121.0", code: "\u22120.1", mae: "+1.1" },
+  { e: "Age ten years too high", tot: "\u22121.0", code: "\u22120.1", mae: "+0.5" },
+  { e: "Sum assured missing", tot: "\u22120.5", code: "+0.2", mae: "+0.5" },
+  { e: "Product code unknown", tot: "\u22120.3", code: "+0.4", mae: "+0.4" },
+  { e: "Age missing", tot: "+0.3", code: "+0.1", mae: "+0.4" },
+  { e: "Product code wrong (another code)", tot: "\u22120.2", code: "+0.5", mae: "+0.5" }
+];
+function PvfpFurther() {
+  const tbl = (cols, rows, keys) => /* @__PURE__ */ React.createElement("table", { className: "dt" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, cols.map((c, i) => /* @__PURE__ */ React.createElement("th", { key: i, className: i ? "r" : "" }, c)))), /* @__PURE__ */ React.createElement("tbody", null, rows.map((r, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, keys.map((k, j) => /* @__PURE__ */ React.createElement("td", { key: j, className: j ? "r" : "" }, r[k]))))));
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(
+    SectionTitle,
+    {
+      title: "Further Tests \u2014 Product Balance, Seeds, Earlier Values, Sampling and Data Errors",
+      sub: "Five follow-up tests of Gradient Boosting on the real portfolio, at the paper's settings and on the same folds as the per-policy and portfolio views. Paper \xA75.1 and \xA75.1.1 summarise the first two; the other three are deployment questions the paper does not cover. Every figure is relative."
+    }
+  ), /* @__PURE__ */ React.createElement("div", { className: "grid g1" }, /* @__PURE__ */ React.createElement(
+    Card,
+    {
+      title: "Removing the Correlation Within Products",
+      note: "Each product code's mean error was estimated inside the training folds and subtracted from its out-of-fold predictions, which removed the correlation of Figure 5 at source: the cluster-robust interval on the portfolio total narrowed from \xB10.95% to \xB10.26%. One proxy per product family lowered the per-policy error below the range of five seeds of the pooled proxy (24.9\u201326.5%). One proxy per product code left too few policies in each fit: its error on the portfolio total was +0.31% (paper \xA75.1.1)."
+    },
+    tbl(["Design", "Per Policy: MAE", "Product Codes: Median Error", "Design Effect", "Error on the Portfolio Total"], FT_BALANCE, ["d", "mae", "code", "deff", "tot"])
+  ), /* @__PURE__ */ React.createElement(
+    Card,
+    {
+      title: "Averaging Over Seeds \u2014 Error on Each Total",
+      note: "A seed fixes a fit's random choices; for Gradient Boosting, which tenth of the policies is withheld to decide when to stop fitting. Single fits on ten seeds moved the stress totals by up to 2.8% (interest rates up, one of the smallest totals); averaging the ten fits' predictions brought the worst to 0.57%. Switching early stopping off removed the randomness but not the error (worst 0.99%). Stresses on a 20,000-policy sample, official-run values (paper \xA75.1)."
+    },
+    tbl(["Total", "Ten Single Fits: Range", "Ten-Fit Average", "No Early Stopping"], FT_SEEDS, ["t", "s", "a", "n"])
+  )), /* @__PURE__ */ React.createElement("div", { className: "grid g1" }, /* @__PURE__ */ React.createElement(
+    Card,
+    {
+      title: "Using Earlier Heavy-Model Values \u2014 Q2-2026 Without a Q2 Run",
+      note: "With the official per-policy values at year-end and Q1 as inputs, the per-policy error fell from 23% to 6% of the average policy value, but on their own the earlier values missed the portfolio total by about 5%. Taking each product type's total from the unchanged year-end proxy, and only the split within it from the change model, retained both. MAE and R\xB2 are on the policies in force at both dates; the total is on every Q2 policy."
+    },
+    tbl(["Method", "Error on the Portfolio Total", "Product Types: Median Error", "Per Policy: MAE", "R\xB2"], FT_PRIOR, ["m", "tot", "pt", "mae", "r2"])
+  ), /* @__PURE__ */ React.createElement(
+    Card,
+    {
+      title: "Valuing Only a Sample of Policies in the Heavy Model",
+      note: "The heavy model valued a share of the policies; the proxy, fitted on them, valued the rest, and the portfolio total is the valued policies' actual plus the proxy's remainder. Five repeats (two for the representative selection). From 10% of the policies, stratified by product code, the total was within 1.1% in every repeat. Choosing 'representative' policies by clustering their inputs (k-means, as in the variable-annuity literature) biased the total upward at every share. Below 10% the repeats spread by several percent."
+    },
+    tbl(["Share Valued", "Selection", "Error on the Portfolio Total: Mean Absolute", "Range over Repeats", "Product Codes: Median Error", "MAE, Unvalued Policies"], FT_SAMPLE, ["f", "sel", "m", "rg", "code", "mae"])
+  ), /* @__PURE__ */ React.createElement(
+    Card,
+    {
+      title: "Data Errors at Prediction Time \u2014 Shift in Percentage Points",
+      note: "The proxy was fitted on clean data; at prediction time 5% of the test policies carried one error, as a new valuation's extract might (three random draws; at 1% the shifts were about a fifth as large). Scale errors in premium or fund value moved the portfolio total by 9 to 18 points, more than any choice of model; missing values and wrong product codes moved it by 2 points or less. Reconcile the input totals with the heavy model's before scoring."
+    },
+    tbl(["Error in the Extract", "Error on the Portfolio Total", "Product Codes: Median Error", "Per Policy: MAE"], FT_DATA, ["e", "tot", "code", "mae"])
   )));
 }
 function NbPolicy() {
@@ -2033,7 +2134,8 @@ const NB_LINES = [
   { l: "Line D", share: "7.5%", ownm: "0.54%", own: "0.994", allocm: "1.6%", alloc: "0.941" }
 ];
 const INFORCE_LINES = [
-  { l: "Largest line", share: "43.2%", ownm: "0.83%", own: "0.998", allocm: "8.2%", alloc: "0.854" },
+  { l: "Unit-linked protection", share: "36.4%", ownm: "0.90%", own: "0.999", allocm: "10.1%", alloc: "0.767" },
+  { l: "Regular-premium savings", share: "6.8%", ownm: "0.82%", own: "0.996", allocm: "9.6%", alloc: "0.593" },
   { l: "Approved retirement funds", share: "9.5%", ownm: "0.06%", own: "1.000", allocm: "12.2%", alloc: "\u22123.79" },
   { l: "Executive pensions", share: "9.1%", ownm: "0.22%", own: "0.998", allocm: "12.5%", alloc: "\u22122.30" },
   { l: "Personal pensions", share: "8.9%", ownm: "0.35%", own: "0.999", allocm: "14.5%", alloc: "\u22120.01" }
@@ -2121,7 +2223,7 @@ function NbLines() {
       title: "Each Line's Own Proxy \u2014 Error on Unseen Scenarios (Table 5.9a)",
       note: "Ridge Linear Regression was the most accurate on all 12 new-business lines: MAPE 0.21\u20131.2% (R\xB2 0.973\u20130.997) against 0.89\u20135.6% for Gradient Boosting (R\xB2 0.545\u20130.982). Two lines never reached 5%; they carry 0.06% of the value. The two lines whose value is near zero are left out of the ranges."
     }
-  )), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, /* @__PURE__ */ React.createElement(Card, { title: "New Business \u2014 The Four Largest Lines", note: "On line B, more than a quarter of new-business value, the fixed-mix allocation produced a median error of 3.2%, against 0.01% for the line's own proxy." }, tb(NB_LINES)), /* @__PURE__ */ React.createElement(Card, { title: "In-Force PVFP \u2014 The Same Test", note: "The mix swung more in force, so the fixed-mix allocation failed more severely: a median error of 8.2% to 14.5% on these lines, against under 1% for each line's own proxy." }, tb(INFORCE_LINES))));
+  )), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, /* @__PURE__ */ React.createElement(Card, { title: "New Business \u2014 The Four Largest Lines", note: "On line B, more than a quarter of new-business value, the fixed-mix allocation produced a median error of 3.2%, against 0.01% for the line's own proxy." }, tb(NB_LINES)), /* @__PURE__ */ React.createElement(Card, { title: "In-Force PVFP \u2014 The Same Test", note: "The mix swung more in force, so the fixed-mix allocation failed more severely: a median error of 9.6% to 14.5% on these lines, against under 1% for each line's own proxy." }, tb(INFORCE_LINES))));
 }
 function ProxyAbility() {
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(
@@ -2142,7 +2244,7 @@ function ProxyAbility() {
     Card,
     {
       title: "How Many Heavy Runs? (Paper \xA75.4, Figure 7)",
-      note: "Whole-portfolio BEL error (MAPE) on held-out scenarios against the training budget, the median over 25 random draws with the interquartile band: about 2% by sixteen runs on central scenarios, 4.0% at sixteen and 3.5% at twenty-four with the lever-extreme scenarios held out. At product level the median error on each unit's own BEL fell from 22% at 4 runs to 8.0% at 16 and 3.1% at 24. A whole-portfolio proxy was usable from about 16 runs, a product-level one from nearer 24."
+      note: "Whole-portfolio BEL error (MAPE) on held-out scenarios against the training budget, the median over 25 random draws with the interquartile band: about 2% by sixteen runs on central scenarios, 4.0% at sixteen and 3.5% at twenty-four with the lever-extreme scenarios held out. At product level the median error on each unit's own BEL fell from 22% at 4 runs to 8.0% at 16 and 3.1% at 24. A whole-portfolio proxy was usable from about 16 runs; measured the same way, the whole portfolio's error was 9.0% at 16 runs and 4.5% at 24, meaning a product-level proxy needed no more runs."
     },
     /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/learning_curve.png"], alt: "Learning curve of whole-portfolio BEL error (MAPE) against the number of heavy runs, with the interquartile band", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })
   )));
@@ -2260,7 +2362,7 @@ const ASK_INDEX = [
   },
   {
     "title": "Overview",
-    "text": "The portfolio total hid what happened by product line \u2014 allocating a pooled proxy on a planning mix produced a median error of 8% to 14% on the larger in-force product lines, against under 1% for each line's own proxy (\xA75.9.1).",
+    "text": "The portfolio total hid what happened by product line \u2014 allocating a pooled proxy on a planning mix produced a median error of 10% to 14% on the larger in-force product lines, against under 1% for each line's own proxy (\xA75.9.1).",
     "tab": "overview",
     "where": "Overview"
   },
@@ -2590,7 +2692,7 @@ const ASK_INDEX = [
   },
   {
     "title": "In-Force PVFP \u2014 The Same Test",
-    "text": "The mix swung more in force, so the fixed-mix allocation failed more severely: a median error of 8.2% to 14.5% on these lines, against under 1% for each line's own proxy.",
+    "text": "The mix swung more in force, so the fixed-mix allocation failed more severely: a median error of 9.6% to 14.5% on these lines, against under 1% for each line's own proxy.",
     "tab": "nb:3",
     "where": "New-Business Value \u25B8 By Product Line"
   },
@@ -2632,7 +2734,7 @@ const ASK_INDEX = [
   },
   {
     "title": "How Many Heavy Runs? (Paper \xA75.4)",
-    "text": "Median error across 102 BEL product-code units, as a share of each unit's own BEL: 22% at 4 runs, 8.0% at 16 and 3.1% at 24; 1% was not reached within the delivered budget. A whole-portfolio proxy was usable from about 16 runs, a product-level one from nearer 24. The released tool computes both predictors from a pilot CSV.",
+    "text": "Median error across 102 BEL product-code units, as a share of each unit's own BEL: 22% at 4 runs, 8.0% at 16 and 3.1% at 24; 1% was not reached within the delivered budget. A whole-portfolio proxy was usable from about 16 runs; measured the same way, the whole portfolio's error was 9.0% at 16 runs and 4.5% at 24, meaning a product-level proxy needed no more runs. The released tool computes both predictors from a pilot CSV.",
     "tab": "pai",
     "where": "Proxy-Ability Index"
   },
@@ -2692,7 +2794,7 @@ const ASK_INDEX = [
   },
   {
     "title": "Adoption Matrix",
-    "text": "Pilot \u2014 about 16 heavy runs over the driver ranges for a whole-portfolio proxy, nearer 24 at product level (\xA75.4)",
+    "text": "Pilot \u2014 about 16 heavy runs over the driver ranges for a whole-portfolio proxy, and no more at product level (\xA75.4)",
     "tab": "governance",
     "where": "Adoption Matrix"
   },
@@ -2727,13 +2829,49 @@ const ASK_INDEX = [
     "where": "Adoption Matrix"
   },
   {
+    "title": "Further Tests \u2014 Product Balance, Seeds, Earlier Values, Sampling and Data Errors",
+    "text": "Five follow-up tests of Gradient Boosting on the real portfolio: removing the correlation within products, averaging over seeds, using earlier heavy-model values, valuing only a sample of policies, and data errors at prediction time.",
+    "tab": "pvfp:0:3",
+    "where": "PVFP \u25B8 Balance Sheet \u25B8 Further Tests"
+  },
+  {
+    "title": "Removing the Correlation Within Products",
+    "text": "Subtracting each product code's mean error, estimated inside the training folds, reduced the design effect from 2.95 to 0.21 and the median product-code error from 2.2% to 0.45%; one proxy per product family produced 0.63 and 0.69%, with per-policy MAE 23% against 26%.",
+    "tab": "pvfp:0:3",
+    "where": "PVFP \u25B8 Balance Sheet \u25B8 Further Tests"
+  },
+  {
+    "title": "Averaging Over Seeds \u2014 Error on Each Total",
+    "text": "Single fits on ten seeds moved the Solvency II stress totals by up to 2.8%; averaging the ten fits' predictions brought the worst to 0.57%. The seed decides which policies Gradient Boosting holds back for early stopping.",
+    "tab": "pvfp:0:3",
+    "where": "PVFP \u25B8 Balance Sheet \u25B8 Further Tests"
+  },
+  {
+    "title": "Using Earlier Heavy-Model Values \u2014 Q2-2026 Without a Q2 Run",
+    "text": "Earlier official per-policy values as inputs reduced the per-policy error from 23% to 6% of the average policy value; scaled to the year-end proxy's product-type totals, the error on the portfolio total remained at \u22120.09%.",
+    "tab": "pvfp:0:3",
+    "where": "PVFP \u25B8 Balance Sheet \u25B8 Further Tests"
+  },
+  {
+    "title": "Valuing Only a Sample of Policies in the Heavy Model",
+    "text": "With 10% of the policies valued by the heavy model, stratified by product code, and the proxy valuing the rest, the portfolio total was within 1.1% in every repeat; representative selection by k-means biased the total upward.",
+    "tab": "pvfp:0:3",
+    "where": "PVFP \u25B8 Balance Sheet \u25B8 Further Tests"
+  },
+  {
+    "title": "Data Errors at Prediction Time \u2014 Shift in Percentage Points",
+    "text": "A premium twelve times too large on 5% of the policies moved the error on the portfolio total by 17.6 points and a fund value ten times too large by 9.3; missing values and wrong product codes moved it by 2 points or less.",
+    "tab": "pvfp:0:3",
+    "where": "PVFP \u25B8 Balance Sheet \u25B8 Further Tests"
+  },
+  {
     "title": "Adoption Matrix",
     "text": "Sign-off \u2014 four-eyes; register the proxy as a model with its boundary and cadence",
     "tab": "governance",
     "where": "Adoption Matrix"
   }
 ];
-const DATASETS = { EMERGENCE_PV, WHEN_FULL, SCORECARD, NN_WHY, VIF_MODELS, BOOSTERS, TAIL_PRODUCTS, CANCEL, EXP5_LEVELS, EXP5_COMPONENTS, PAI_PROSP, SHAP_DRIVERS, GMATRIX, GPRIN, SCR_SPECTRUM, BEL_POLICY, NB_SURFACE, NB_SHELF, NB_LINES, INFORCE_LINES, GLOSSARY, T51, T511A, T512, T52B, T53, T510, T62 };
+const DATASETS = { EMERGENCE_PV, WHEN_FULL, SCORECARD, NN_WHY, VIF_MODELS, BOOSTERS, TAIL_PRODUCTS, CANCEL, EXP5_LEVELS, EXP5_COMPONENTS, PAI_PROSP, SHAP_DRIVERS, GMATRIX, GPRIN, SCR_SPECTRUM, BEL_POLICY, NB_SURFACE, NB_SHELF, NB_LINES, INFORCE_LINES, FT_BALANCE, FT_SEEDS, FT_PRIOR, FT_SAMPLE, FT_DATA, GLOSSARY, T51, T511A, T512, T52B, T53, T510, T62 };
 const ASK_STOP = new Set("a an the and or of for in on at to by is are was were be it its this that what which who how why when where does do did can could should would will with from as vs than than per there their them about into than more most not no".split(" "));
 const ASK_SYN = {
   vnb: "new business value",
@@ -2872,7 +3010,7 @@ const EXPERIMENTS = [
     "proj": "BEL, whole portfolio and product level",
     "q": "How many heavy runs did a proxy need?",
     "design": "Learning curves over repeated random draws of the Sobol design.",
-    "res": "Here, with five levers, a low-order proxy of a smooth whole-portfolio aggregate was usable from about 16 heavy runs, a product-level one from nearer 24.",
+    "res": "Here, with five levers, a low-order proxy of a smooth whole-portfolio aggregate was usable from about 16 heavy runs, and a product-level one needed no more.",
     "embed": [
       "ProxyAbility"
     ],
@@ -2975,7 +3113,7 @@ const EXPERIMENTS = [
     "proj": "New-business value and in-force PVFP, by product line",
     "q": "Should one pooled proxy be split by a planning mix, or should each line have its own?",
     "design": "Each line's own proxy against the pooled proxy allocated on the central mix, on the same designs.",
-    "res": "Decomposing cost nothing in aggregate (an identity for linear proxies) and was decisive per line: on the in-force portfolio the allocated pooled proxy produced a median error of 8.2% to 14.5% by line, against under 1% for each line's own proxy.",
+    "res": "Decomposing cost nothing in aggregate (an identity for linear proxies) and was decisive per line: on the in-force portfolio the allocated pooled proxy produced a median error of 9.6% to 14.5% by line, against under 1% for each line's own proxy.",
     "embed": [
       "NbLines"
     ],
@@ -3115,7 +3253,8 @@ const TABS = [
     { label: "Balance Sheet", el: /* @__PURE__ */ React.createElement(SubTabs, { id: "pvfp", depth: 2, tabs: [
       { label: "Per Policy", el: /* @__PURE__ */ React.createElement(Leaderboard, null) },
       { label: "Portfolio Level", el: /* @__PURE__ */ React.createElement(PvfpPortfolio, null) },
-      { label: "Across Quarters", el: /* @__PURE__ */ React.createElement(PvfpAcross, null) }
+      { label: "Across Quarters", el: /* @__PURE__ */ React.createElement(PvfpAcross, null) },
+      { label: "Further Tests", el: /* @__PURE__ */ React.createElement(PvfpFurther, null) }
     ] }) },
     { label: "Revenue Account (Annual)", el: /* @__PURE__ */ React.createElement(Emergence, null) },
     { label: "Assumption Basis Changes", el: /* @__PURE__ */ React.createElement(BasisChanges, null) }
