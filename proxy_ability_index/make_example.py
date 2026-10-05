@@ -8,11 +8,12 @@ magnitude, sign kept) and product codes replaced by U001.. labels. Every descrip
 scale-invariant per unit, so the tool's output is unchanged by the indexing - and no absolute amount or
 product code leaves the insurer.
 """
+import os
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(r"C:\Users\jloftus\AI Proxy Models Research")
+ROOT = Path(os.environ.get("STUDY_ROOT", "."))   # the insurer's study folder; its inputs are not distributed
 OUT = Path(__file__).resolve().parent / "example"
 OUT.mkdir(exist_ok=True)
 

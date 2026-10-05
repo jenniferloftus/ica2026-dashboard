@@ -3,8 +3,8 @@ Synthetic life-insurance portfolio + per-policy oracle.
 ================================================================================
 ***FULLY SYNTHETIC — NO REAL POLICYHOLDER DATA.*** A releasable reproducibility
 artifact for the paper: a designed data-generating process whose STRUCTURE is
-known, built to mirror the study insurer's real product mix (unit-linked savings,
-pensions, protection, investment bonds, deferred annuities "ANN") so we can test
+known, with illustrative product families (unit-linked savings, pensions,
+protection, investment bonds and a decumulation family "ANN") so we can test
 whether the paper's transferable *shapes* — the reconciliation paradox, the
 difficulty atlas, and the Proxy-Ability Index — reproduce on a DIFFERENT book.
 
@@ -20,21 +20,22 @@ The oracle is deliberately structured so that:
 
 Nothing here reproduces the insurer's real numbers; only the qualitative shapes. That
 is precisely the paper's generalisation claim ("shapes transfer, magnitudes do
-not"). Drivers match the real 8-lever Sobol design.
+not"). Drivers use the same names and scales as the study's lever design.
 """
 from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-# ---- scenario drivers (same names/scales as the real Sobol design) -----------
+# ---- scenario drivers (same names/scales as the study's lever design) --------
 DRIVERS = ["rfr_parallel_bp", "curve_twist_bp", "equity_property_x", "credit_spread_bp",
            "lapse_x", "mortality_x", "maint_expense_x", "expense_infl_bp"]
 CENTRAL = {"rfr_parallel_bp": 0.0, "curve_twist_bp": 0.0, "equity_property_x": 1.0,
            "credit_spread_bp": 0.0, "lapse_x": 1.0, "mortality_x": 1.0,
            "maint_expense_x": 1.0, "expense_infl_bp": 0.0}
 
-# ---- product families (mix + feature generators), mirroring the real book ----
-# weight = share of portfolio. Each family has distinct economics -> distinct
+# ---- product families (mix + feature generators) -----------------------------
+# weight = share of the synthetic portfolio, chosen by design (not the insurer's
+# mix). Each family has distinct economics -> distinct
 # surface geometry and tail behaviour.
 FAMILIES = {
     "ULSavings":      dict(weight=0.30, kind="fund",   term=(10, 25), age=(28, 60)),
@@ -93,7 +94,7 @@ def generate_portfolio(n=40000, seed=20260728):
             eq_w = rng.beta(2, 4, cnt)
         prop_w = np.clip(rng.beta(1.5, 6, cnt) * (1 - eq_w), 0, None)
         cash_w = np.clip(1 - eq_w - prop_w, 0, None)
-        # ~55% of savings/protection/pension are new business; bonds/annuities fewer
+        # illustrative new-business shares by family, chosen by design
         p_new = {"ULSavings": .55, "Pension": .5, "Protection": .6,
                  "InvestmentBond": .35, "ANN": .3}[fam]
         is_nb = rng.random(cnt) < p_new
@@ -166,8 +167,8 @@ def oracle(df, scenario=None, add_noise=True, seed=0):
     charge_income = AMC * fund_shocked * a * persist * (1 + 0.15 * eqw * d["eq"])
     exp_pp = (60 + 0.0006 * fund) * s["maint_expense_x"] * _annuity(term, r + d["infl"])
     ev_fund = charge_income - exp_pp
-    # protection: PV(premiums - reinsured claims - expenses); claims mostly ceded
-    claim_pv = sa * _mort_rate(age, gen) * s["mortality_x"] * 0.10 * a   # 90% reinsured
+    # protection: PV(premiums - reinsured claims - expenses); an illustrative cession
+    claim_pv = sa * _mort_rate(age, gen) * s["mortality_x"] * 0.10 * a   # retained share, by design
     prem_pv = regp * a * persist
     ev_risk = prem_pv - claim_pv - 40 * s["maint_expense_x"] * a
     ev = np.where(is_risk, ev_risk, ev_fund)

@@ -3,8 +3,8 @@ Synthetic reproduction of the paper's three transferable results
 ================================================================================
 ***FULLY SYNTHETIC DATA (portfolio.py) — releasable reproducibility artifact.***
 
-Runs the paper's own analysis machinery on a synthetic book built to mirror the
-real product mix, to test the generalisation claim ("shapes transfer, magnitudes
+Runs the paper's own analysis machinery on a synthetic book with illustrative
+product families, to test the generalisation claim ("shapes transfer, magnitudes
 do not"). Reproduces:
 
   (1) the RECONCILIATION PARADOX  — per-policy proxy is poor yet the aggregate
