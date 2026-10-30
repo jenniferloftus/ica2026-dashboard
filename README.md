@@ -6,6 +6,7 @@ Insurance*, Jennifer Loftus FIA FSAI, 33rd International Congress of Actuaries, 
 | What | Paper | Description |
 |---|---|---|
 | [Interactive dashboard](https://jenniferloftus.github.io/ica2026-dashboard/) (`index.html`) | Section 5 | The results, figures and adoption matrix. A single self-contained file that also works offline. Where the dashboard and the paper differ, the paper governs. |
+| [Narrated overview](https://jenniferloftus.github.io/ica2026-dashboard/video/ICA2026_Dashboard_Overview_Narrated.mp4) (`video/`) | – | A six-and-a-half-minute guided tour of the dashboard, in plain English, with subtitles ([`.srt`](video/ICA2026_Dashboard_Overview_Narrated.srt)). |
 | [`proxy_ability_index/`](proxy_ability_index/) | Section 5.3 | A practitioner tool: from a small pilot of heavy-model runs, it predicts which units a proxy model can reproduce and diagnoses why. Includes a worked example from the study's own pilot. |
 | [`experiment_synthetic/`](experiment_synthetic/) | Section 5.10 | A fully synthetic 40,000-policy portfolio and a seeded harness that reproduce the paper's patterns end to end. |
 

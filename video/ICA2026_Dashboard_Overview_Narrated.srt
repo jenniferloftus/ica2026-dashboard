@@ -1,0 +1,344 @@
+1
+00:00:00,600 --> 00:00:04,720
+This is the companion dashboard to the ICA 2026 paper,
+
+2
+00:00:04,720 --> 00:00:12,198
+Comparing the Effectiveness of AI Proxy Models Across Key Actuarial Projections in Life Insurance.
+
+3
+00:00:12,148 --> 00:00:14,558
+The question is simple.
+
+4
+00:00:14,558 --> 00:00:19,606
+Can quick AI models stand in for an insurer's full actuarial models,
+
+5
+00:00:19,606 --> 00:00:21,684
+which are detailed but slow?
+
+6
+00:00:21,684 --> 00:00:24,970
+The paper calls these the heavy models.
+
+7
+00:00:24,970 --> 00:00:30,330
+The study tested this on a real book of life insurance policies, for three jobs:
+
+8
+00:00:30,330 --> 00:00:34,730
+solvency capital, the value of the business already on the books,
+
+9
+00:00:34,730 --> 00:00:36,761
+and the value of new business.
+
+10
+00:00:36,761 --> 00:00:39,790
+No euro amounts are shown.
+
+11
+00:00:39,790 --> 00:00:43,540
+Every result is a percentage or a ratio.
+
+12
+00:00:44,329 --> 00:00:48,440
+The Overview sums up the paper in five numbers.
+
+13
+00:00:48,390 --> 00:00:53,364
+The main finding is what the paper calls the reconciliation paradox.
+
+14
+00:00:53,364 --> 00:00:59,910
+Take one of the models, Gradient Boosting, estimating each policy's future profits.
+
+15
+00:00:59,910 --> 00:01:07,204
+On a single policy, its errors were large: about 26% of the average policy's value.
+
+16
+00:01:07,204 --> 00:01:13,178
+Yet when its estimates were added up over a fifth of the portfolio it had never seen,
+
+17
+00:01:13,178 --> 00:01:15,568
+the total was out by less than 1%.
+
+18
+00:01:15,568 --> 00:01:17,784
+Its errors fell on both sides,
+
+19
+00:01:17,784 --> 00:01:23,029
+and were largely unrelated to each other, so they mostly cancelled out.
+
+20
+00:01:23,849 --> 00:01:27,741
+Any underlined word has a short definition.
+
+21
+00:01:27,691 --> 00:01:30,371
+Hover over it to read it.
+
+22
+00:01:30,371 --> 00:01:33,876
+There's a full glossary at the bottom of the page.
+
+23
+00:01:34,649 --> 00:01:38,515
+You can also type a question into the search box.
+
+24
+00:01:38,465 --> 00:01:41,913
+Ask, for example, why the errors cancel out,
+
+25
+00:01:41,913 --> 00:01:45,205
+and it takes you straight to the evidence.
+
+26
+00:01:46,049 --> 00:01:50,624
+The PVFP tab, short for the present value of future profits,
+
+27
+00:01:50,624 --> 00:01:54,284
+ranks the models on the insurer's real policies.
+
+28
+00:01:54,234 --> 00:01:59,053
+Change the way the error is measured, and the order changes.
+
+29
+00:01:59,053 --> 00:02:02,984
+So the best model depends on what it will be used for.
+
+30
+00:02:03,769 --> 00:02:07,854
+Hover over any bar to see its exact value.
+
+31
+00:02:08,649 --> 00:02:14,757
+Many charts can also be shown as a table, or downloaded as a spreadsheet file.
+
+32
+00:02:15,529 --> 00:02:21,523
+Actual against predicted plots each model's estimates against the full model's answers,
+
+33
+00:02:21,523 --> 00:02:24,279
+policy by policy and product by product.
+
+34
+00:02:24,229 --> 00:02:27,495
+It also puts three kinds of model side by side:
+
+35
+00:02:27,495 --> 00:02:31,038
+a simple model whose workings can be read directly,
+
+36
+00:02:31,038 --> 00:02:35,234
+a model built from many decision trees, and a neural network.
+
+37
+00:02:36,009 --> 00:02:41,214
+Portfolio Level follows one model through three levels: single policies,
+
+38
+00:02:41,214 --> 00:02:46,202
+products, and the total for a fifth of the portfolio it had not seen.
+
+39
+00:02:46,152 --> 00:02:50,495
+On that total, the error fell below 1%.
+
+40
+00:02:51,369 --> 00:02:55,067
+The Solvency Two tab turns to capital.
+
+41
+00:02:55,017 --> 00:02:59,022
+The standard formula sets capital by testing shocks,
+
+42
+00:02:59,022 --> 00:03:04,644
+such as a fall in share prices, lower interest rates, or higher expenses.
+
+43
+00:03:04,644 --> 00:03:09,992
+The study trained a separate model for each shock, policy by policy.
+
+44
+00:03:09,992 --> 00:03:13,883
+Pick a shock, then a way of measuring the error.
+
+45
+00:03:14,649 --> 00:03:16,947
+Added up over the whole portfolio,
+
+46
+00:03:16,947 --> 00:03:22,623
+the totals for all eleven shocks were within 0.6% of the full model in the main run,
+
+47
+00:03:22,623 --> 00:03:29,056
+and within 2.8% when the training was repeated five times from different random starting points.
+
+48
+00:03:29,006 --> 00:03:32,087
+Taking each fifth of the portfolio on its own,
+
+49
+00:03:32,087 --> 00:03:39,522
+52 of the 55 totals were within the range you would expect if each policy's error were unrelated to the others.
+
+50
+00:03:40,369 --> 00:03:44,235
+The value of new business showed the same pattern.
+
+51
+00:03:44,185 --> 00:03:50,783
+But a model trained once and then left alone was out by 8.3% after just one quarter.
+
+52
+00:03:50,783 --> 00:03:56,350
+So the new-business models were retrained on each new group of policies sold.
+
+53
+00:03:57,169 --> 00:04:02,440
+Model Choice shows which kind of model was most accurate for each job.
+
+54
+00:04:02,390 --> 00:04:06,657
+Two things decided it: how smooth the pattern being copied was,
+
+55
+00:04:06,657 --> 00:04:10,315
+and how many full-model runs there were to learn from.
+
+56
+00:04:10,315 --> 00:04:17,050
+For the insurer's best estimate of what it owes its policyholders, a fitted formula,
+
+57
+00:04:17,050 --> 00:04:22,394
+the LSMC polynomial, was out by 1.1% on scenarios it had not seen,
+
+58
+00:04:22,394 --> 00:04:25,147
+against 12% for Gradient Boosting.
+
+59
+00:04:25,147 --> 00:04:30,805
+For capital worked out policy by policy, Gradient Boosting did best.
+
+60
+00:04:31,609 --> 00:04:36,378
+The Proxy-Ability Index asks, before the full-model runs are spent,
+
+61
+00:04:36,378 --> 00:04:39,225
+which products a quick model can handle.
+
+62
+00:04:39,175 --> 00:04:44,703
+A small trial of sixteen runs ranked the products by how well they could be copied.
+
+63
+00:04:44,703 --> 00:04:49,959
+That ranking closely matched the accuracy seen on seventeen new runs,
+
+64
+00:04:49,959 --> 00:04:54,987
+with a rank correlation of 0.92, where 1 would be a perfect match.
+
+65
+00:04:54,987 --> 00:04:57,680
+The index explained why.
+
+66
+00:04:58,529 --> 00:05:05,307
+Explainability asks whether a model that can't be read directly can still be explained to a reviewer.
+
+67
+00:05:05,257 --> 00:05:11,372
+An explanation tool called SHAP showed correctly which way each factor pushed the result,
+
+68
+00:05:11,372 --> 00:05:16,043
+and put the factors in the right order, apart from one swapped pair.
+
+69
+00:05:16,043 --> 00:05:19,729
+But it did not get the size of each effect right.
+
+70
+00:05:20,529 --> 00:05:25,233
+The Adoption Matrix turns the findings into practical guidance.
+
+71
+00:05:25,183 --> 00:05:30,204
+For each job, it says which kind of model to use, how to check it,
+
+72
+00:05:30,204 --> 00:05:34,693
+how often to retrain it, and where it stops being reliable.
+
+73
+00:05:34,693 --> 00:05:38,157
+The other half says when to run the full model instead:
+
+74
+00:05:38,157 --> 00:05:41,559
+when assumptions change unevenly across the portfolio,
+
+75
+00:05:41,559 --> 00:05:42,632
+for new products,
+
+76
+00:05:42,632 --> 00:05:47,051
+and when markets move outside the conditions the model was trained on.
+
+77
+00:05:47,889 --> 00:05:51,166
+By Experiment lists every test in the study:
+
+78
+00:05:51,166 --> 00:05:55,634
+the question it asked, how it was set up, and what it found.
+
+79
+00:05:56,409 --> 00:05:59,888
+Paper Figures holds all ten figures from the paper,
+
+80
+00:05:59,888 --> 00:06:03,368
+and the other tabs go into the results behind them.
+
+81
+00:06:04,129 --> 00:06:09,013
+And you can download all the data behind the dashboard in one click.
+
+82
+00:06:09,769 --> 00:06:11,991
+If you're new to the dashboard,
+
+83
+00:06:11,991 --> 00:06:16,650
+the How to Use tab explains each part of the page in plain words.
+
+84
+00:06:17,409 --> 00:06:22,448
+To repeat: every result here is a percentage or a ratio.
+
+85
+00:06:22,398 --> 00:06:27,436
+No euro amounts and no individual policy records are published.
+
+86
+00:06:27,436 --> 00:06:29,782
+Thank you for watching.
+
