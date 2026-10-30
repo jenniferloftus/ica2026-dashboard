@@ -458,7 +458,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
   .legend .k{display:inline-flex;align-items:center;gap:6px}
   .legend .sw{width:10px;height:10px;border-radius:3px;display:inline-block}
   .legend .ln{width:14px;height:2px;display:inline-block}
-  .dt{width:100%;border-collapse:collapse;font-size:12px}
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}.dt{width:100%;border-collapse:collapse;font-size:12px}
   .dt th{text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line);
     padding:5px 8px;white-space:nowrap}
   .dt td{border-bottom:1px solid var(--grid);padding:5px 8px;font-variant-numeric:tabular-nums}
@@ -777,8 +777,12 @@ function Card({ title, note, foot, right, table, children, collapsed = false }) 
     if (!table && root.current && root.current.querySelector("table")) setHasT(true);
   }, []);
   const csv = () => {
-    const el = hidden.current && hidden.current.querySelector("table") || root.current && root.current.querySelector("table");
-    if (el) downloadText(slug(title) + ".csv", tableToCSV(el));
+    const parts = [];
+    [hidden.current, root.current].filter(Boolean).forEach((r) => r.querySelectorAll("table").forEach((el) => {
+      const s = tableToCSV(el);
+      if (s && !parts.includes(s)) parts.push(s);
+    }));
+    if (parts.length) downloadText(slug(title) + ".csv", parts.join("\r\n\r\n"));
   };
   return /* @__PURE__ */ React.createElement("div", { className: "card", ref: root }, /* @__PURE__ */ React.createElement("div", { className: "cardtop" }, /* @__PURE__ */ React.createElement(
     "button",
@@ -790,7 +794,7 @@ function Card({ title, note, foot, right, table, children, collapsed = false }) 
       onClick: () => setOpen(!open)
     },
     open ? "\u25BE" : "\u25B8"
-  ), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h3", { style: { cursor: "pointer" }, onClick: () => setOpen(!open) }, splitTitle(title)), note && /* @__PURE__ */ React.createElement("div", { className: "note" }, gloss(note))), /* @__PURE__ */ React.createElement("div", { className: "sp" }), table && /* @__PURE__ */ React.createElement("button", { className: "tbtn", onClick: () => setShowT(!showT) }, showT ? "\u25EB Chart" : "\u229E Table"), hasT && /* @__PURE__ */ React.createElement("button", { className: "tbtn", title: "Download this table as a CSV file", onClick: csv }, "\u21E9 CSV"), right), /* @__PURE__ */ React.createElement("div", { className: "cbody" + (open ? "" : " shut") }, table && showT ? table : children, table && /* @__PURE__ */ React.createElement("div", { ref: hidden, style: { display: "none" } }, table), foot && /* @__PURE__ */ React.createElement("div", { className: "foot" }, foot)));
+  ), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h3", { style: { cursor: "pointer" }, onClick: () => setOpen(!open) }, splitTitle(title)), note && /* @__PURE__ */ React.createElement("div", { className: "note" }, gloss(note))), /* @__PURE__ */ React.createElement("div", { className: "sp" }), table && /* @__PURE__ */ React.createElement("button", { className: "tbtn", onClick: () => setShowT(!showT) }, showT ? "\u25EB Chart" : "\u229E Table"), hasT && /* @__PURE__ */ React.createElement("button", { className: "tbtn", title: "Download this table as a CSV file", onClick: csv }, "\u21E9 CSV"), right), /* @__PURE__ */ React.createElement("div", { className: "cbody" + (open ? "" : " shut") }, table && showT ? /* @__PURE__ */ React.createElement("div", { className: "tscroll" }, table) : children, table && /* @__PURE__ */ React.createElement("div", { ref: hidden, style: { display: "none" } }, table), foot && /* @__PURE__ */ React.createElement("div", { className: "foot" }, foot)));
 }
 function slug(s) {
   return String(s || "table").normalize("NFKD").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase().slice(0, 80) || "table";
@@ -1253,7 +1257,10 @@ function Overview() {
       title: "Overview \u2014 The Paper in Five Numbers",
       sub: `Companion to the ICA 2026 paper. AI proxy models compared across the Solvency II BEL and SCR and the embedded-value PVFP, new-business value and profit emergence, against the insurer's heavy models, on a real in-force life portfolio. All figures relative. Valuation date ${ASOF}.`
     }
-  ), /* @__PURE__ */ React.createElement("div", { className: "note", style: { margin: "-4px 0 10px" } }, "Start here: the five numbers below, then ", /* @__PURE__ */ React.createElement("b", null, "Model Choice"), " (which model for which purpose) and ", /* @__PURE__ */ React.createElement("b", null, "Adoption Matrix"), " (when a proxy may be used). Definitions: the Glossary at the foot of this page."), /* @__PURE__ */ React.createElement("div", { className: "grid g5" }, /* @__PURE__ */ React.createElement(Hero, { lbl: "Error on the Total of an Unseen Fifth of the Portfolio \u2014 PVFP", val: "0.6%", sub: "root mean square over five folds (\u22120.9% to +0.8%), while per-policy MAE \u2248 26% of the average policy value" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "SII Stress Fold Totals Inside the Independent-Error Band", val: "52 / 55", sub: "one proxy per fold valuing about 4,000 unseen policies; summed across folds all 11 within \xB10.6% (\xB12.8% across five random seeds) \u2014 hypothesis that tails break cancellation refuted" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "Product-Line Effect Hidden by the Total", val: "14.7\xD7", sub: "a change worth \u22121.8% on the portfolio was \u221226.4% on one product line" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "Unchanged Proxy Over Two Real Quarters \u2014 PVFP \xB7 BEL", val: "\xB10.7% \xB7 \xB11%", sub: "no refit and no time-value adjustment; market-stress capital did break (\xA75.6)" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "A 16-Run Pilot Ranked Which Product Codes a Proxy Could Carry", val: "0.92", sub: "rank correlation with accuracy on 17 unseen runs; the Proxy-Ability Index (0.88) diagnosed why (\xA75.3)" })), /* @__PURE__ */ React.createElement("div", { className: "grid g32" }, /* @__PURE__ */ React.createElement(
+  ), /* @__PURE__ */ React.createElement("div", { className: "note", style: { margin: "-4px 0 10px" } }, "Start here: the five numbers below, then ", /* @__PURE__ */ React.createElement("b", null, "Model Choice"), " (which model for which purpose) and ", /* @__PURE__ */ React.createElement("b", null, "Adoption Matrix"), " (when a proxy may be used). Definitions: the Glossary at the foot of this page. New to the dashboard? See ", /* @__PURE__ */ React.createElement("a", { href: "#howto", style: { color: "var(--navy)", fontWeight: 600 }, onClick: (e) => {
+    e.preventDefault();
+    window.dashGo("howto");
+  } }, "How to Use"), "."),/* @__PURE__ */ React.createElement("div", { className: "grid g5" }, /* @__PURE__ */ React.createElement(Hero, { lbl: "Error on the Total of an Unseen Fifth of the Portfolio \u2014 PVFP", val: "0.6%", sub: "root mean square over five folds (\u22120.9% to +0.8%), while per-policy MAE \u2248 26% of the average policy value" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "SII Stress Fold Totals Inside the Independent-Error Band", val: "52 / 55", sub: "one proxy per fold valuing about 4,000 unseen policies; summed across folds all 11 within \xB10.6% (\xB12.8% across five random seeds) \u2014 hypothesis that tails break cancellation refuted" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "Product-Line Effect Hidden by the Total", val: "14.7\xD7", sub: "a change worth \u22121.8% on the portfolio was \u221226.4% on one product line" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "Unchanged Proxy Over Two Real Quarters \u2014 PVFP \xB7 BEL", val: "\xB10.7% \xB7 \xB11%", sub: "no refit and no time-value adjustment; market-stress capital did break (\xA75.6)" }), /* @__PURE__ */ React.createElement(Hero, { lbl: "A 16-Run Pilot Ranked Which Product Codes a Proxy Could Carry", val: "0.92", sub: "rank correlation with accuracy on 17 unseen runs; the Proxy-Ability Index (0.88) diagnosed why (\xA75.3)" })), /* @__PURE__ */ React.createElement("div", { className: "grid g32" }, /* @__PURE__ */ React.createElement(
     Card,
     {
       title: "The Reconciliation Paradox \u2014 Large Errors per Policy, a Small Error on the Portfolio Total",
@@ -1455,6 +1462,7 @@ function Leaderboard() {
     Card,
     {
       title: "Where the Errors Live \u2014 MAE by Product, % of Each Product's Average Policy Value",
+      table: figData("tail"),
       note: "The fund-size tail was a scale effect: the largest-fund quintile had the lowest error relative to its average policy value (19%, against 22\u201337% for the other quintiles). The genuine, feature-addressable difficulty was protection \u2014 decreasing term assurance and unit-linked protection \u2014 the likeliest place for richer rider and sum-at-risk features to move the needle."
     },
     /* @__PURE__ */ React.createElement(
@@ -1527,6 +1535,7 @@ function PvfpAcross() {
     Card,
     {
       title: "Re-Forecasting the Plan Year from Each Quarter's Policy Data (Paper \xA75.13)",
+      table: figData(10),
       note: "Per-policy proxies trained once on the heavy model's YE-2025 run, frozen, then fed the Q1 and Q2-2026 model points \u2013 which carry new business, lapses, deaths and fund values \u2013 to re-forecast the next 12 months' profit, month by month, and the PVFP without re-running the engine. The benchmark is the heavy model run on the same model points, on a static assumption basis; an unadjusted roll-forward of the year-end forecast is shown for contrast, since it cannot see what changed. Relative bias on the portfolio total."
     },
     /* @__PURE__ */ React.createElement("table", { className: "dt" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", null, "Re-Forecast"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "Next 12 Months' Profit, Q1"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "Next 12 Months' Profit, Q2"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "PVFP, Q1"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "PVFP, Q2"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "Per-Policy R\xB2, Year 1 (Q1 \xB7 Q2)"))), /* @__PURE__ */ React.createElement("tbody", null, ROLLFWD.map((r, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, /* @__PURE__ */ React.createElement("td", null, r.m), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.q1), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.q2), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.p1), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.p2), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.r1 === "\u2013" ? "\u2013" : r.r1 + " \xB7 " + r.r2))))),
@@ -1585,6 +1594,7 @@ function Emergence() {
     Card,
     {
       title: "Accounting-Identity Arm \u2014 Explainable by Construction",
+      table: figData("comp"),
       note: "Predict the 8 Revenue Account component groups and sum them: over 200 random splits, a median error of 3.2% on the whole portfolio's discounted total (curve R\xB2 0.984), against 1.6% for the LSMC Polynomial with the year as an input (paper \xA74). Per-component R\xB2 at portfolio level, one split:"
     },
     /* @__PURE__ */ React.createElement(
@@ -1762,6 +1772,7 @@ function Explain() {
     Card,
     {
       title: "Figure 8 \xB7 Actual, White-Box and Black-Box Sensitivities",
+      table: figData(8),
       note: "Sensitivity of BEL to each lever, largest driver = 100 in each series. Ridge Linear Regression reproduced the actual (heavy-model) sensitivities to within half a point; SHAP on a Random Forest recovered every sign and the order of the two dominant drivers, but understated every driver after the first, risk-benefit claims by up to 3.8 times, and swapped risk-benefit claims and lapse."
     },
     /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/shap_attribution.png"], alt: "Grouped bars of actual (heavy-model), Ridge Linear Regression and SHAP sensitivities for five levers, each scaled to its largest driver", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })
@@ -1839,14 +1850,150 @@ function Governance() {
     /* @__PURE__ */ React.createElement("table", { className: "dt", style: { fontSize: 12.5 } }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", null, "Function"), /* @__PURE__ */ React.createElement("th", null, "Business Insight"), /* @__PURE__ */ React.createElement("th", null, "Evidence in This Study and Boundary"))), /* @__PURE__ */ React.createElement("tbody", null, T62.map((r, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, /* @__PURE__ */ React.createElement("td", { style: { fontWeight: 600 } }, r[0]), /* @__PURE__ */ React.createElement("td", null, r[1]), /* @__PURE__ */ React.createElement("td", { style: { color: "var(--muted)" } }, r[2])))))
   ), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, /* @__PURE__ */ React.createElement(Card, { title: "Seven Evidence-Led Principles" }, /* @__PURE__ */ React.createElement("table", { className: "dt", style: { fontSize: 12 } }, /* @__PURE__ */ React.createElement("tbody", null, GPRIN.map((p, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, /* @__PURE__ */ React.createElement("td", { style: { fontWeight: 700, color: "var(--navy)", width: 34 } }, p[0]), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("b", null, gloss(p[1])), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--muted)", marginTop: 2 } }, gloss(p[2])))))))), /* @__PURE__ */ React.createElement(Card, { title: "Adoption Workflow \u2014 Proxy-Ability Triage" }, /* @__PURE__ */ React.createElement("ol", { className: "tkr", style: { fontSize: 12.5, lineHeight: 1.5 } }, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Pilot"), " \u2014 about 16 heavy runs over the driver ranges for a whole-portfolio proxy, and no more at product level (\xA75.4)"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Triage"), " \u2014 rank units by the pilot's own cross-validation; the Proxy-Ability Index (curvature, tail-kurtosis) explains the hard ones; low scores \u2192 more runs or keep on heavy model"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Select"), " \u2014 class by geometry and data budget: smooth at pilot budgets \u2192 LSMC/Ridge Linear Regression (a Gaussian Process tied on BEL and outperformed it on PVFP); kinked or heterogeneous with rows \u2192 tree ensemble; hard auditability \u2192 EBM"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Validate"), " \u2014 aggregate reconciliation vs tolerance, with a cluster-robust interval at the reporting granularity; balance enforced on any neural proxy; SHAP recovers known sensitivities"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Gate"), " \u2014 split-conformal intervals; route widest 1\u20132% to the heavy model; disclose coverage"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Bound"), " \u2014 document validity boundary: product mix + market state + horizon"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("b", null, "Sign-off"), " \u2014 four-eyes; register the proxy as a model with its boundary and cadence")), /* @__PURE__ */ React.createElement("div", { className: "note", style: { marginTop: 6 } }, "The sharpest rule the data supports: the refitting frequency should be ", /* @__PURE__ */ React.createElement("b", null, "stress-specific"), "; here, capital-monitoring frequency was set by the market and interest-rate stresses \u2014 not by the well-behaved central and demographic metrics."))), /* @__PURE__ */ React.createElement("div", { className: "note", style: { marginTop: 8 } }, "The extended matrix, with per-policy validation stances and evidence links, is available from the author on request (paper, Reproducibility and Artefacts)."));
 }
+// The numbers behind each paper figure, for its Table view and CSV: percentages, R², ratios and indices only
+// (no amounts, no policy counts, no product codes), read from the result files the figure code reads.
+const FIG1_ABSTRACT = [
+  { panel: "1 · Reconciliation Paradox", item: "Per-policy MAE on the synthetic portfolio of 40,000 policies, % of the average policy value", v: "42%" },
+  { panel: "1 · Reconciliation Paradox", item: "Error on the total of the whole synthetic portfolio", v: "−0.02%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 10 policies: mean absolute error on the pool's total", v: "21.32%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 15 policies: mean absolute error on the pool's total", v: "20.28%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 24 policies: mean absolute error on the pool's total", v: "17.01%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 37 policies: mean absolute error on the pool's total", v: "13.46%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 57 policies: mean absolute error on the pool's total", v: "12.17%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 89 policies: mean absolute error on the pool's total", v: "8.66%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 137 policies: mean absolute error on the pool's total", v: "6.26%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 212 policies: mean absolute error on the pool's total", v: "4.40%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 329 policies: mean absolute error on the pool's total", v: "4.98%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 508 policies: mean absolute error on the pool's total", v: "3.81%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 787 policies: mean absolute error on the pool's total", v: "3.15%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 1,217 policies: mean absolute error on the pool's total", v: "2.53%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 1,884 policies: mean absolute error on the pool's total", v: "2.10%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 2,915 policies: mean absolute error on the pool's total", v: "1.63%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 4,510 policies: mean absolute error on the pool's total", v: "1.19%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 6,978 policies: mean absolute error on the pool's total", v: "1.10%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 10,797 policies: mean absolute error on the pool's total", v: "0.66%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 16,707 policies: mean absolute error on the pool's total", v: "0.50%" },
+  { panel: "1 · Reconciliation Paradox", item: "Random pools of 25,851 policies: mean absolute error on the pool's total", v: "0.35%" },
+  { panel: "2 · Shape and Runs Set the Class", item: "A schematic, with no data: a white box fits a smooth response (BEL) but misses a kinked one (SCR), which a black box follows", v: "–" },
+  { panel: "3 · Predict, Then Diagnose", item: "Product-code BEL units in the pilot", v: "100" },
+  { panel: "3 · Predict, Then Diagnose", item: "Rank correlation of the Proxy-Ability Index, from a 16-run pilot, with R² on 17 unseen runs", v: "0.88" },
+  { panel: "3 · Predict, Then Diagnose", item: "The same for the pilot's own cross-validated R², for comparison", v: "0.92" },
+  { panel: "3 · Predict, Then Diagnose", item: "Units with R² ≥ 0.95 on the unseen runs", v: "66 of 100" },
+  { panel: "3 · Predict, Then Diagnose", item: "Threshold drawn (τ): the lowest Index at which at least 95% of the units at or above it reach R² ≥ 0.95", v: "−0.78" },
+  { panel: "3 · Predict, Then Diagnose", item: "Units at or above the threshold that reach R² ≥ 0.95", v: "62 of 65" },
+  { panel: "4 · The Adoption Decision", item: "A schematic, with no data: each use (a metric at a level of detail) gets a pilot check; then the bulk is proxied, the tail gated and the rest routed to the heavy model", v: "–" }
+];
+const FIG2_COVERAGE = [
+  { basis: "Embedded Value, 20-Year Projection", proj: "PVFP", vd: "✓", ann: "–", mon: "–", ye: "✓", q1: "✓", q2: "✓" },
+  { basis: "Embedded Value, 20-Year Projection", proj: "↳ Year by Year (Profit Emergence)", vd: "✓", ann: "✓", mon: "–", ye: "✓", q1: "–", q2: "–" },
+  { basis: "Embedded Value, 20-Year Projection", proj: "↳ Plan Year by Month (Monthly Profit)", vd: "–", ann: "–", mon: "✓", ye: "✓", q1: "✓", q2: "✓" },
+  { basis: "Embedded Value, 20-Year Projection", proj: "New-Business Value", vd: "✓", ann: "✓", mon: "–", ye: "✓", q1: "✓", q2: "✓" },
+  { basis: "Solvency II, 35-Year Projection", proj: "Best-Estimate Liability", vd: "✓", ann: "–", mon: "–", ye: "✓", q1: "✓", q2: "✓" },
+  { basis: "Solvency II, 35-Year Projection", proj: "SCR Sub-Stresses", vd: "✓", ann: "–", mon: "–", ye: "✓", q1: "✓", q2: "✓" },
+  { basis: "Solvency II, 35-Year Projection", proj: "↳ Diversified SCR (Standard Formula)", vd: "✓", ann: "–", mon: "–", ye: "✓", q1: "–", q2: "–" }
+];
+const FIG3_MODELS = [
+  { lab: "Ridge", m: "Ridge Linear Regression", fam: "Classical Statistical", cls: "White Box", ord: 1 },
+  { lab: "LSMC", m: "Least-Squares Monte Carlo Polynomial (the benchmark)", fam: "Classical Statistical", cls: "White Box", ord: 2 },
+  { lab: "DT", m: "Decision Tree", fam: "Classical Machine Learning", cls: "White Box", ord: 3 },
+  { lab: "EBM", m: "Explainable Boosting Machine", fam: "Classical Machine Learning", cls: "Glass Box", ord: 4 },
+  { lab: "GP", m: "Gaussian Process", fam: "Classical Machine Learning", cls: "Other Black Box", ord: 5 },
+  { lab: "RF", m: "Random Forest", fam: "Classical Machine Learning", cls: "Tree Ensemble", ord: 6 },
+  { lab: "GB", m: "Gradient Boosting", fam: "Classical Machine Learning", cls: "Tree Ensemble", ord: 7 },
+  { lab: "NN", m: "Neural Network", fam: "Neural Networks", cls: "Neural Network", ord: 8 }
+];
+const FIG4_SIZE = [
+  { n: "10k policies", gb: "0.317%", lsmc: "0.792%", nn: "0.517%" },
+  { n: "30k policies", gb: "0.196%", lsmc: "0.422%", nn: "0.505%" },
+  { n: "100k policies", gb: "0.104%", lsmc: "0.245%", nn: "0.484%" },
+  { n: "300k policies", gb: "0.063%", lsmc: "0.138%", nn: "0.481%" },
+  { n: "1m policies", gb: "0.033%", lsmc: "0.070%", nn: "0.485%" },
+  { n: "Fitted log–log slope (the law predicts −0.5)", gb: "−0.495", lsmc: "−0.519", nn: "−0.015" },
+  { n: "Share of the error at 1m that is bias", gb: "11%", lsmc: "11%", nn: "100%" }
+];
+const FIG5_PRODUCTS = [
+  { m: "Ridge Linear Regression", deff: "0.07", out: "3%", pol: "0.3%" },
+  { m: "Gradient Boosting", deff: "2.95", out: "32%", pol: "26.8%" },
+  { m: "Neural Network (MLP 128-64, Seed 1)", deff: "4.39", out: "20%", pol: "37.9%" }
+];
+const FIG6_ATLAS = [
+  { s: "BEL (Whole Portfolio)", meas: "MAPE on held-out scenarios", wb: "1.1%", wbr2: "0.996", tr: "12.2%", trr2: "0.686", nn: "2.9%", nnr2: "0.974" },
+  { s: "PVFP (Whole Portfolio)", meas: "MAPE on held-out scenarios", wb: "0.91%", wbr2: "0.995", tr: "7.0%", trr2: "0.796", nn: "1.6%", nnr2: "0.983" },
+  { s: "New-Business Value (Whole Portfolio)", meas: "MAPE on held-out scenarios", wb: "0.09%", wbr2: "0.9997", tr: "4.0%", trr2: "0.547", nn: "0.38%", nnr2: "0.994" },
+  { s: "SCR Expense Stress (Per Policy)", meas: "RMSE, % of the average policy value", wb: "33.7%", wbr2: "0.909", tr: "14.9%", trr2: "0.982", nn: "37.9%", nnr2: "0.885" }
+];
+const FIG7_RUNS = [
+  { n: 4, c: "21.4%", ci: "11.3–30.7%", a: "27.3%", ai: "13.5–35.1%" },
+  { n: 7, c: "5.8%", ci: "4.6–9.3%", a: "9.7%", ai: "5.7–14.6%" },
+  { n: 10, c: "4.0%", ci: "3.1–5.2%", a: "4.8%", ai: "3.7–7.2%" },
+  { n: 13, c: "3.3%", ci: "2.4–4.0%", a: "4.6%", ai: "3.4–5.8%" },
+  { n: 16, c: "2.4%", ci: "2.1–3.1%", a: "4.0%", ai: "3.4–4.6%" },
+  { n: 19, c: "2.3%", ci: "2.1–2.6%", a: "3.6%", ai: "3.5–4.3%" },
+  { n: 22, c: "2.1%", ci: "2.0–2.3%", a: "3.5%", ai: "3.4–3.8%" },
+  { n: 24, c: "2.1%", ci: "2.1–2.1%", a: "3.5%", ai: "3.5–3.5%" }
+];
+const FIG9_BIAS = [
+  { meas: "Per-policy MAE, % of the average policy value", ridge: "53.3%", nn1: "24.5%", nn2: "24.7%", nn3: "24.6%" },
+  { meas: "Mean error per policy, % of the average policy value", ridge: "+0.03%", nn1: "+1.12%", nn2: "+0.36%", nn3: "−0.25%" },
+  { meas: "Bias in each of the five fits, % of the average policy value", ridge: "0.00 in every fit (zero by construction)", nn1: "−6.52, +0.96, +3.89, +1.95, +5.04", nn2: "−1.15, +0.33, −4.32, +3.45, +3.36", nn3: "−7.99, +1.89, +2.17, +1.13, +2.15" },
+  { meas: "Error on the portfolio total, as fitted", ridge: "+0.03%", nn1: "+1.14%", nn2: "+0.37%", nn3: "−0.25%" },
+  { meas: "Error on the portfolio total, balance-corrected", ridge: "–", nn1: "+0.06%", nn2: "+0.03%", nn3: "−0.12%" }
+];
+const FIG10_MONTHLY = [
+  { q: "Q1-2026", mo: 1, a: 107.4, r: 105.7, g: 107.5, n: 105.2 },
+  { q: "Q1-2026", mo: 2, a: 110.2, r: 110.3, g: 110.6, n: 103.8 },
+  { q: "Q1-2026", mo: 3, a: 108.2, r: 106.4, g: 105.9, n: 102.5 },
+  { q: "Q1-2026", mo: 4, a: 106.3, r: 104.2, g: 103.9, n: 100.5 },
+  { q: "Q1-2026", mo: 5, a: 104.3, r: 102.7, g: 101.8, n: 98.7 },
+  { q: "Q1-2026", mo: 6, a: 101.2, r: 101, g: 100.7, n: 96.1 },
+  { q: "Q1-2026", mo: 7, a: 98.7, r: 98, g: 97.7, n: 93.5 },
+  { q: "Q1-2026", mo: 8, a: 94.3, r: 95.8, g: 94.2, n: 89.9 },
+  { q: "Q1-2026", mo: 9, a: 91.6, r: 92.4, g: 90, n: 85.8 },
+  { q: "Q1-2026", mo: 10, a: 93.2, r: 93.4, g: 91.1, n: 91.2 },
+  { q: "Q1-2026", mo: 11, a: 93.8, r: 91.7, g: 91.5, n: 89.9 },
+  { q: "Q1-2026", mo: 12, a: 90.9, r: 89.6, g: 90.4, n: 87.2 },
+  { q: "Q2-2026", mo: 1, a: 107.3, r: 105, g: 106.9, n: 97 },
+  { q: "Q2-2026", mo: 2, a: 110.8, r: 110.6, g: 109.6, n: 95.3 },
+  { q: "Q2-2026", mo: 3, a: 107.2, r: 106.7, g: 105.5, n: 92.8 },
+  { q: "Q2-2026", mo: 4, a: 104.2, r: 104.1, g: 101.4, n: 90.3 },
+  { q: "Q2-2026", mo: 5, a: 99.5, r: 102, g: 97.6, n: 86.8 },
+  { q: "Q2-2026", mo: 6, a: 98.7, r: 99.7, g: 95.7, n: 82.9 },
+  { q: "Q2-2026", mo: 7, a: 98, r: 99.4, g: 95.9, n: 88.1 },
+  { q: "Q2-2026", mo: 8, a: 98.5, r: 98.9, g: 96.3, n: 86.8 },
+  { q: "Q2-2026", mo: 9, a: 95.9, r: 96.3, g: 93.6, n: 84.2 },
+  { q: "Q2-2026", mo: 10, a: 94.2, r: 94.3, g: 92.6, n: 82.7 },
+  { q: "Q2-2026", mo: 11, a: 93.3, r: 91.8, g: 91.6, n: 81.9 },
+  { q: "Q2-2026", mo: 12, a: 92.4, r: 92.1, g: 91.1, n: 80.8 }
+];
+// FIG_COLS[n]: [field, heading, right-aligned, format] for each column of figure n's table ("tail" and "comp" are
+// the two drawn charts on the PVFP tabs); FIG_ROWS[n] holds its rows.
+const FIG_COLS = {
+  1: [["panel", "Panel"], ["item", "What Is Shown"], ["v", "Value", 1]],
+  2: [["basis", "Basis"], ["proj", "Projection"], ["vd", "Scored at the Valuation Date", 1], ["ann", "Scored as an Annual Revenue Account", 1], ["mon", "Scored as a Monthly Revenue Account", 1], ["ye", "YE-2025", 1], ["q1", "Q1-2026", 1], ["q2", "Q2-2026", 1]],
+  3: [["lab", "Label"], ["m", "Model"], ["fam", "Model Family (Vertical Axis)"], ["cls", "Model Class (Colour)"], ["ord", "Order, Most to Least Inspectable", 1]],
+  4: [["n", "Mean Absolute Error on the Portfolio Total"], ["gb", "Gradient Boosting", 1], ["lsmc", "LSMC", 1], ["nn", "Neural Network (64-32)", 1]],
+  5: [["m", "Model"], ["deff", "Design Effect (1 = Independent Errors)", 1], ["out", "Product Codes Outside the 95% Band", 1], ["pol", "Share of the Portfolio's Policies in Those Codes", 1]],
+  6: [["s", "Surface"], ["meas", "Measure"], ["wb", "Best White Box", 1], ["wbr2", "R²", 1], ["tr", "Best Tree Ensemble", 1], ["trr2", "R²", 1], ["nn", "Best Neural Network", 1], ["nnr2", "R²", 1]],
+  7: [["n", "Heavy Runs in the Training Budget (LSMC Polynomial)"], ["c", "Median MAPE, Six Central Scenarios Held Out", 1], ["ci", "Interquartile Range", 1], ["a", "Median MAPE, Lever Extremes Also Held Out", 1], ["ai", "Interquartile Range", 1]],
+  8: [["d", "Driver"], ["ap", "Sign, the Same for All Three", 1], ["tr", "Actual (Heavy Model)", 1], ["wh", "Ridge Linear Regression", 1], ["bk", "SHAP, Random Forest", 1]],
+  9: [["meas", "Measure"], ["ridge", "Ridge Linear Regression", 1], ["nn1", "Neural Network, Seed 1", 1], ["nn2", "Seed 2", 1], ["nn3", "Seed 3", 1]],
+  10: [["q", "Re-Forecast From"], ["mo", "Month", 1], ["a", "Heavy Model (Actual; Its Average Month = 100)", 1, (v) => v.toFixed(1)], ["r", "Ridge Linear Regression", 1, (v) => v.toFixed(1)], ["g", "Gradient Boosting", 1, (v) => v.toFixed(1)], ["n", "Year-End Forecast Rolled Forward", 1, (v) => v.toFixed(1)]],
+  tail: [["p", "Product"], ["v", "MAE, % of the Product's Average Policy Value", 1, (v) => v.toFixed(1) + "%"]],
+  comp: [["p", "Revenue Account Component"], ["v", "R² at Portfolio Level (One Split)", 1, (v) => v.toFixed(2)]]
+};
+const FIG_ROWS = { 1: FIG1_ABSTRACT, 2: FIG2_COVERAGE, 3: FIG3_MODELS, 4: FIG4_SIZE, 5: FIG5_PRODUCTS, 6: FIG6_ATLAS, 7: FIG7_RUNS, 8: SHAP_DRIVERS, 9: FIG9_BIAS, 10: FIG10_MONTHLY, tail: TAIL_PRODUCTS, comp: EXP5_COMPONENTS };
+function figData(n) {
+  const cols = FIG_COLS[n];
+  return /* @__PURE__ */ React.createElement("table", { className: "dt" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, cols.map((c, i) => /* @__PURE__ */ React.createElement("th", { key: i, className: c[2] ? "r" : void 0 }, c[1])))), /* @__PURE__ */ React.createElement("tbody", null, FIG_ROWS[n].map((r, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, cols.map((c, j) => /* @__PURE__ */ React.createElement("td", { key: j, className: c[2] ? "r" : void 0 }, c[3] ? c[3](r[c[0]]) : r[c[0]]))))));
+}
 function PaperFigures() {
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(
     SectionTitle,
     {
       title: "The Paper's Figures",
-      sub: "The ten figures of the ICA 2026 paper, exactly as published; tap or click a figure to enlarge it. Each tab of this page drills into the results behind them."
+      sub: "The ten figures of the ICA 2026 paper, exactly as published; tap or click a figure to enlarge it, or press ⊞ Table for its numbers. Each tab of this page drills into the results behind them."
     }
-  ), /* @__PURE__ */ React.createElement("div", { className: "grid g1" }, /* @__PURE__ */ React.createElement(Card, { title: "Figure 1 \xB7 Graphical Abstract", note: "The thesis in four steps: the reconciliation paradox, shown on the releasable synthetic portfolio; geometry and data budget decided the model class (panel figures from the synthetic mirror); a pilot predicted which units a proxy could carry, and the Proxy-Ability Index diagnosed why this was the case; and the adoption decision - proxy the bulk, gate the tail, route the rest to the heavy model." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["results/graphical_abstract.png"], alt: "Four-panel graphical abstract of the paper's thesis", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 2 \xB7 What Was Run, at Which Scoring Level, at Which Valuation Date", note: "Filled indicates tested. Rows are grouped by basis, which sets the horizon: 20 years on embedded value, 35 on Solvency II. Profit emergence is the PVFP projection year by year, scored as an annual stream at year-end only; new-business value was scored both as a present value and, at one valuation date, as an annual stream (\xA75.9.2). The diversified SCR is the stress proxies aggregated through the standard formula, at year-end only." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/coverage_grid.png"], alt: "Grid of projections against scoring levels and valuation dates, filled where tested", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 3 \xB7 The Model Spectrum on Two Axes", note: "Inspectability decreases left to right; model family runs from classical statistical models at the bottom to Neural Networks at the top. A single Decision Tree is inspectable yet is machine learning; the LSMC Polynomial is the classical benchmark every other class has to outperform." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/model_map.png"], alt: "Map of model classes by inspectability and model family", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 4 \xB7 Aggregate Error Against Portfolio Size (Log-Log)", note: "Errors that satisfy Prop. 5.1's conditions fall at the N^-1/2 rate; a biased proxy's error stays flat, because a bias does not shrink with portfolio size. The portfolios are bootstrap resamples of this one, so the figure illustrates the law rather than testing it, and the Neural Network here is a smaller, briefly trained 64-32 architecture, not the Neural Networks of Table 5.11a." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/scaling_law.png"], alt: "Log-log lines of aggregate reconciliation error falling with portfolio size, one flat", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 5 \xB7 Where Errors Move Together", note: "Each point is a product code: its mean out-of-fold error less the portfolio's, as a share of the average policy value, against its share of the portfolio's policies (log scale). The shaded funnel is where 95% of products would fall if errors were independent; filled points fall outside it. Centring removes bias, so what remains is correlation within products. Gradient Boosting's design effect was 2.95, which widened the honest interval on the portfolio total from \xB10.56% to \xB10.95%; Ridge Linear Regression's product-code terms nearly balanced each large product (0.07); the Neural Network's was 4.39." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/error_correlation_funnel.png"], alt: "Three funnel plots of each product's mean error against its share of the portfolio, for Ridge Linear Regression, Gradient Boosting and a Neural Network", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 6 \xB7 The Difficulty Atlas", note: "Each scored on the measure that matches how it is used. Three smooth whole-portfolio surfaces, scored by MAPE on unseen scenarios, where the white box, tuned in-fold, outperforms the best tree ensemble outright (0.09\u20131.1% against 4\u201312%); and one heterogeneous per-policy capital target, scored by RMSE as a share of the average policy value, where the ensemble halves the error. The purple bar is the best of three Neural Networks on the same test: it outperforms the trees on the smooth surfaces but trails the tuned white box on every one, and per policy on capital it trails even a single tree (38% against 34%). R\xB2 sits beneath each bar. Geometry and data budget decided." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/atlas.png"], alt: "Two panels of grouped bars: mean absolute percentage error of the best white-box, best tree-ensemble and best neural-network proxies on three whole-portfolio surfaces, and per-policy RMSE on the SCR expense stress, with R-squared beneath each bar", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 7 \xB7 Where the Heavy-Run Budget Stops Buying Accuracy", note: "Whole-portfolio BEL error (MAPE) on held-out scenarios against training budget, median over 25 draws with the interquartile band, on the six central scenarios and with the three lever-extreme anchors added: about 2.4% at sixteen runs on central scenarios, 4.0% at sixteen and 3.5% at twenty-four with the extremes held out." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/learning_curve.png"], alt: "Learning curve of whole-portfolio BEL error (MAPE) against the number of heavy runs, with the interquartile band", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 8 \xB7 What a Black-Box Attribution Recovers", note: "Sensitivity of BEL to each lever, largest driver = 100 in each series. Ridge Linear Regression reproduces the actual (heavy-model) sensitivities to within half a point; SHAP on a Random Forest recovers every sign and the order of the two dominant drivers, but understates every driver after the first, by up to 3.8 times, and swaps risk-benefit claims and lapse." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/shap_attribution.png"], alt: "Grouped bars of actual (heavy-model), Ridge Linear Regression and SHAP sensitivities for five levers, each scaled to its largest driver", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 9 \xB7 Tighter per Policy, Biased per Fit", note: "(a) Errors per policy for Ridge Linear Regression and the Neural Network (MLP 128-64, seed 1): the Neural Network's are about half as wide, and the means differ by about 1% of an average policy value, invisible at this scale. (b) Each fit's bias on its own training data: zero for Ridge Linear Regression by construction, not for the Neural Network. (c) Error on the portfolio total as fitted and balance-corrected: the sign changes from seed to seed, and the correction removes it (mean absolute 0.58% to 0.07%)." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/nn_vs_ridge_bias.png"], alt: "Three panels: per-policy error distributions for Ridge Linear Regression and a Neural Network, each fit's bias, and the error on the portfolio total before and after balance correction", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { title: "Figure 10 \xB7 Re-Forecasting the Next Twelve Months from a Proxy Unchanged Since Year-End", note: "Monthly profit of the in-force portfolio, indexed so that the heavy model's average month is 100, from the Q1-2026 and Q2-2026 policy data: the heavy model, the two proxies, and an unadjusted roll-forward of the year-end forecast. Both proxies re-forecast the year's profit within 2% at both dates; the roll-forward missed by 4.6% and 12.5% (paper \xA75.13)." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/rollforward_profile.png"], alt: "Monthly profit for the next 12 months from Q1 and Q2-2026: heavy model, Ridge Linear Regression, Gradient Boosting and an unadjusted roll-forward of the year-end forecast", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" }))));
+  ), /* @__PURE__ */ React.createElement("div", { className: "grid g1" }, /* @__PURE__ */ React.createElement(Card, { table: figData(1), title: "Figure 1 \xB7 Graphical Abstract", note: "The thesis in four steps: the reconciliation paradox, shown on the releasable synthetic portfolio; geometry and data budget decided the model class (panel figures from the synthetic mirror); a pilot predicted which units a proxy could carry, and the Proxy-Ability Index diagnosed why this was the case; and the adoption decision - proxy the bulk, gate the tail, route the rest to the heavy model." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["results/graphical_abstract.png"], alt: "Four-panel graphical abstract of the paper's thesis", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(2), title: "Figure 2 \xB7 What Was Run, at Which Scoring Level, at Which Valuation Date", note: "Filled indicates tested. Rows are grouped by basis, which sets the horizon: 20 years on embedded value, 35 on Solvency II. Profit emergence is the PVFP projection year by year, scored as an annual stream at year-end only; new-business value was scored both as a present value and, at one valuation date, as an annual stream (\xA75.9.2). The diversified SCR is the stress proxies aggregated through the standard formula, at year-end only." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/coverage_grid.png"], alt: "Grid of projections against scoring levels and valuation dates, filled where tested", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(3), title: "Figure 3 \xB7 The Model Spectrum on Two Axes", note: "Inspectability decreases left to right; model family runs from classical statistical models at the bottom to Neural Networks at the top. A single Decision Tree is inspectable yet is machine learning; the LSMC Polynomial is the classical benchmark every other class has to outperform." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/model_map.png"], alt: "Map of model classes by inspectability and model family", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(4), title: "Figure 4 \xB7 Aggregate Error Against Portfolio Size (Log-Log)", note: "Errors that satisfy Prop. 5.1's conditions fall at the N^-1/2 rate; a biased proxy's error stays flat, because a bias does not shrink with portfolio size. The portfolios are bootstrap resamples of this one, so the figure illustrates the law rather than testing it, and the Neural Network here is a smaller, briefly trained 64-32 architecture, not the Neural Networks of Table 5.11a." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/scaling_law.png"], alt: "Log-log lines of aggregate reconciliation error falling with portfolio size, one flat", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(5), title: "Figure 5 \xB7 Where Errors Move Together", note: "Each point is a product code: its mean out-of-fold error less the portfolio's, as a share of the average policy value, against its share of the portfolio's policies (log scale). The shaded funnel is where 95% of products would fall if errors were independent; filled points fall outside it. Centring removes bias, so what remains is correlation within products. Gradient Boosting's design effect was 2.95, which widened the honest interval on the portfolio total from \xB10.56% to \xB10.95%; Ridge Linear Regression's product-code terms nearly balanced each large product (0.07); the Neural Network's was 4.39." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/error_correlation_funnel.png"], alt: "Three funnel plots of each product's mean error against its share of the portfolio, for Ridge Linear Regression, Gradient Boosting and a Neural Network", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(6), title: "Figure 6 \xB7 The Difficulty Atlas", note: "Each scored on the measure that matches how it is used. Three smooth whole-portfolio surfaces, scored by MAPE on unseen scenarios, where the white box, tuned in-fold, outperforms the best tree ensemble outright (0.09\u20131.1% against 4\u201312%); and one heterogeneous per-policy capital target, scored by RMSE as a share of the average policy value, where the ensemble halves the error. The purple bar is the best of three Neural Networks on the same test: it outperforms the trees on the smooth surfaces but trails the tuned white box on every one, and per policy on capital it trails even a single tree (38% against 34%). R\xB2 sits beneath each bar. Geometry and data budget decided." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/atlas.png"], alt: "Two panels of grouped bars: mean absolute percentage error of the best white-box, best tree-ensemble and best neural-network proxies on three whole-portfolio surfaces, and per-policy RMSE on the SCR expense stress, with R-squared beneath each bar", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(7), title: "Figure 7 \xB7 Where the Heavy-Run Budget Stops Buying Accuracy", note: "Whole-portfolio BEL error (MAPE) on held-out scenarios against training budget, median over 25 draws with the interquartile band, on the six central scenarios and with the three lever-extreme anchors added: about 2.4% at sixteen runs on central scenarios, 4.0% at sixteen and 3.5% at twenty-four with the extremes held out." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/learning_curve.png"], alt: "Learning curve of whole-portfolio BEL error (MAPE) against the number of heavy runs, with the interquartile band", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(8), title: "Figure 8 \xB7 What a Black-Box Attribution Recovers", note: "Sensitivity of BEL to each lever, largest driver = 100 in each series. Ridge Linear Regression reproduces the actual (heavy-model) sensitivities to within half a point; SHAP on a Random Forest recovers every sign and the order of the two dominant drivers, but understates every driver after the first, by up to 3.8 times, and swaps risk-benefit claims and lapse." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/shap_attribution.png"], alt: "Grouped bars of actual (heavy-model), Ridge Linear Regression and SHAP sensitivities for five levers, each scaled to its largest driver", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(9), title: "Figure 9 \xB7 Tighter per Policy, Biased per Fit", note: "(a) Errors per policy for Ridge Linear Regression and the Neural Network (MLP 128-64, seed 1): the Neural Network's are about half as wide, and the means differ by about 1% of an average policy value, invisible at this scale. (b) Each fit's bias on its own training data: zero for Ridge Linear Regression by construction, not for the Neural Network. (c) Error on the portfolio total as fitted and balance-corrected: the sign changes from seed to seed, and the correction removes it (mean absolute 0.58% to 0.07%)." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/nn_vs_ridge_bias.png"], alt: "Three panels: per-policy error distributions for Ridge Linear Regression and a Neural Network, each fit's bias, and the error on the portfolio total before and after balance correction", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })), /* @__PURE__ */ React.createElement(Card, { table: figData(10), title: "Figure 10 \xB7 Re-Forecasting the Next Twelve Months from a Proxy Unchanged Since Year-End", note: "Monthly profit of the in-force portfolio, indexed so that the heavy model's average month is 100, from the Q1-2026 and Q2-2026 policy data: the heavy model, the two proxies, and an unadjusted roll-forward of the year-end forecast. Both proxies re-forecast the year's profit within 2% at both dates; the roll-forward missed by 4.6% and 12.5% (paper \xA75.13)." }, /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/rollforward_profile.png"], alt: "Monthly profit for the next 12 months from Q1 and Q2-2026: heavy model, Ridge Linear Regression, Gradient Boosting and an unadjusted roll-forward of the year-end forecast", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" }))));
 }
 function SubTabs({ id, tabs, depth = 1 }) {
   const h = (location.hash || "").replace("#", "").split(":");
@@ -1889,6 +2036,7 @@ function PvfpPortfolio() {
     Card,
     {
       title: "Figure 4 \xB7 Portfolio Size and Bias",
+      table: figData(4),
       note: "On engine-valued portfolios of up to a million policies, the balanced proxies' error fell as N^\u22121/2; the Neural Network's bias did not shrink (paper \xA75.11, Table 5.11b). The portfolios are bootstrap resamples of this one, so this illustrates the law rather than testing it, and the Neural Network here is a smaller, briefly trained 64-32."
     },
     /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/scaling_law.png"], alt: "Log-log lines of aggregate error falling with portfolio size for Gradient Boosting and LSMC, flat for the Neural Network", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })
@@ -1896,6 +2044,7 @@ function PvfpPortfolio() {
     Card,
     {
       title: "The Neural Network's Bias, and the Balance Correction (Table 5.11a, Figure 9)",
+      table: figData(9),
       note: "Re-tested on its own terms \u2013 a standardised target, early stopping, three sizes \u2013 the Neural Network was the most accurate per policy and the least accurate on the portfolio total, and the sign of its error changed from seed to seed. Adding back its mean training residual (heavy-model value less prediction) on every fit, using the training fold only, reduced the error on the total from a mean absolute 0.58% to 0.07% over three seeds, with per-policy R\xB2 unchanged (paper \xA75.11)."
     },
     /* @__PURE__ */ React.createElement("table", { className: "dt" }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", null, "Model"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "MAE, % of Average Policy Value"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "R\xB2 per Policy"), /* @__PURE__ */ React.createElement("th", { className: "r" }, "Error on the Portfolio Total"))), /* @__PURE__ */ React.createElement("tbody", null, T511A.map((r, i) => /* @__PURE__ */ React.createElement("tr", { key: i }, /* @__PURE__ */ React.createElement("td", null, r.m), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.mae), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.r2), /* @__PURE__ */ React.createElement("td", { className: "r" }, r.agg))))),
@@ -1904,6 +2053,7 @@ function PvfpPortfolio() {
     Card,
     {
       title: "Figure 5 \xB7 Where Errors Moved Together (Condition A2)",
+      table: figData(5),
       note: "Each point is a product code: its mean out-of-fold error less the portfolio's, as a share of the average policy value, against its share of the portfolio's policies (log scale). The shaded funnel is where 95% of products would fall if errors were independent. Gradient Boosting's design effect was 2.95, which widened the honest interval on the portfolio total from \xB10.56% to \xB10.95%; Ridge Linear Regression's product-code terms nearly balanced each large product (0.07); the Neural Network's was 4.39 (paper \xA75.1.1)."
     },
     /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/error_correlation_funnel.png"], alt: "Three funnel plots of each product's mean error against its share of the portfolio, for Ridge Linear Regression, Gradient Boosting and a Neural Network", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })
@@ -2284,6 +2434,7 @@ function ProxyAbility() {
     Card,
     {
       title: "How Many Heavy Runs? (Paper \xA75.4, Figure 7)",
+      table: figData(7),
       note: "Whole-portfolio BEL error (MAPE) on held-out scenarios against the training budget, the median over 25 random draws with the interquartile band: about 2.4% at sixteen runs on central scenarios, 4.0% at sixteen and 3.5% at twenty-four with the lever-extreme scenarios held out. At product level the median error on each unit's own BEL fell from 22% at 4 runs to 8.0% at 16 and 3.1% at 24. A whole-portfolio proxy was usable from about 16 runs; measured the same way, the whole portfolio's error was 9.0% at 16 runs and 4.5% at 24, meaning a product-level proxy required no more runs."
     },
     /* @__PURE__ */ React.createElement("img", { src: __IMG["deck_assets/learning_curve.png"], alt: "Learning curve of whole-portfolio BEL error (MAPE) against the number of heavy runs, with the interquartile band", style: { width: "100%", height: "auto", display: "block" }, loading: "lazy" })
@@ -2414,7 +2565,7 @@ const ASK_INDEX = [
   },
   {
     "title": "The Paper's Figures",
-    "text": "The ten figures of the ICA 2026 paper, exactly as published. Each tab of this page drills into the results behind them.",
+    "text": "The ten figures of the ICA 2026 paper, exactly as published, each with a table of its numbers. Each tab of this page drills into the results behind them.",
     "tab": "figures",
     "where": "Paper Figures"
   },
@@ -2929,7 +3080,7 @@ const ASK_INDEX = [
     "where": "Adoption Matrix"
   }
 ];
-const DATASETS = { EMERGENCE_PV, WHEN_FULL, SCORECARD, NN_WHY, VIF_MODELS, BOOSTERS, TAIL_PRODUCTS, CANCEL, EXP5_LEVELS, EXP5_COMPONENTS, PAI_PROSP, SHAP_DRIVERS, GMATRIX, GPRIN, SCR_SPECTRUM, BEL_POLICY, NB_SURFACE, NB_SHELF, NB_LINES, INFORCE_LINES, FT_BALANCE, FT_SEEDS, FT_FIT, FT_PRIOR, FT_SAMPLE, FT_DATA, GLOSSARY, T51, T511A, T512, T52B, T53, T510, T62 };
+const DATASETS = { EMERGENCE_PV, WHEN_FULL, SCORECARD, NN_WHY, VIF_MODELS, BOOSTERS, TAIL_PRODUCTS, CANCEL, EXP5_LEVELS, EXP5_COMPONENTS, PAI_PROSP, SHAP_DRIVERS, GMATRIX, GPRIN, SCR_SPECTRUM, BEL_POLICY, NB_SURFACE, NB_SHELF, NB_LINES, INFORCE_LINES, FT_BALANCE, FT_SEEDS, FT_FIT, FT_PRIOR, FT_SAMPLE, FT_DATA, GLOSSARY, T51, T511A, T512, T52B, T53, T510, T62, FIG1_ABSTRACT, FIG2_COVERAGE, FIG3_MODELS, FIG4_SIZE, FIG5_PRODUCTS, FIG6_ATLAS, FIG7_RUNS, FIG9_BIAS, FIG10_MONTHLY };
 const ASK_STOP = new Set("a an the and or of for in on at to by is are was were be it its this that what which who how why when where does do did can could should would will with from as vs than than per there their them about into than more most not no".split(" "));
 const ASK_SYN = {
   vnb: "new business value",
@@ -3237,7 +3388,55 @@ const EXPERIMENTS = [
   },
   { "k": "rollforward", "name": "Plan-Year Re-Forecast from Each Quarter's Policy Data", "sec": "\xA75.13", "kind": "Across policies", "proj": "Next 12 months' profit, month by month, and PVFP (embedded value)", "q": "Could proxies trained once at year end re-forecast the plan year from each quarter's policy data, without re-running the engine?", "design": "Heavy-model runs at YE-2025, Q1 and Q2-2026 on each date's policy data, on a static assumption basis; Ridge Linear Regression and Gradient Boosting trained on the year-end run, frozen, then fed the later policy data.", "res": "Yes, here: the frozen proxies' next-12-months profit was within 2% of the heavy model at both quarters (Ridge Linear Regression \u22120.73% and +0.08%), PVFP within 0.3%; rolling the year-end forecast forward missed by 4.64% and 12.53%.", "embed": ["PvfpAcross"], "links": [] }
 ];
-const ASK_ALL = ASK_INDEX.concat(EXPERIMENTS.map((x, i) => ({ title: "Experiment: " + x.name, card: i + 1 + ". " + x.name, text: x.res, tab: "experiments:" + i, where: "By Experiment" })), [{ title: "Actual against predicted annual profit over 20 years", text: "Held-out scenarios: Gradient Boosting tracked the curve; the LSMC Polynomial missed the early-year fall yet its discounted total was within 2% - the discounted total hid a year-by-year profile that did not follow the actual one.", tab: "pvfp:1", where: "PVFP \u25B8 Revenue Account (Annual)" }], SCORECARD.map((r) => ({ card: "Which Model Was Most Accurate Where", title: "Which model was the most accurate: " + r[0], text: "White box " + r[1] + "; tree ensemble " + r[2] + "; Neural Network " + r[3], tab: "choice", where: "Model Choice" })), NN_WHY.map((r) => ({ card: "Why the Neural Network Was Not the Most Accurate", title: "Why the Neural Network was not the most accurate: " + r[0], text: r[1], tab: "choice", where: "Model Choice" })), WHEN_FULL.map((r) => ({ card: "When to Run the Heavy Model", title: "When to run the heavy model: " + r[0], text: r[1] + " (" + r[2] + ")", tab: "governance", where: "Adoption Matrix" })));
+const HOW_TO = [
+  { title: "Finding Your Way Around", items: [
+    "The row of tabs at the top holds the main topics. Some tabs have a second row of buttons underneath, and a few have a third, such as **PVFP ▸ Balance Sheet ▸ Per Policy**.",
+    "New here? Start with **Overview**, which sums up the paper in five numbers. Then **Model Choice** shows which kind of model worked best for each job, and **Adoption Matrix** shows when a model may be used and when it may not.",
+    "Each box on a page is a card. Click its title, or the small arrow beside it, to fold it away or open it again.",
+    "The web address changes as you move between tabs, so you can bookmark a view or share a link to it. Your browser's Back and Forward buttons work as usual.",
+    "On a phone, swipe the row of tabs sideways to see them all."
+  ] },
+  { title: "Reading a Chart", items: [
+    "Hover over a bar, point or row to see its exact value. On a phone, tap it.",
+    "Where a card has buttons such as **RMSE**, **MAE** or **Relative Bias**, they change how the error is measured. The order of the models can change when you do.",
+    "Charts that compare many models have a **Choose Models** button. Use it to hide or show single models, or a whole family of them, such as every tree ensemble.",
+    "Some charts use a log scale, where each step along the axis is ten times the one before. This lets very large and very small errors share one chart.",
+    "Click a figure from the paper to see it full size. Click again, or press Esc, to close it."
+  ] },
+  { title: "Getting Help on Any Page", items: [
+    "A word with a dotted underline has a short definition. Hover over it, or tap it on a phone, to read it.",
+    "All the definitions are collected in the **Glossary** at the bottom of the Overview tab. Click its title to open it.",
+    "To find something, type a few words or a question into the box at the top, for example “which model is most accurate”. Pick a suggestion to go straight to that card, which is briefly outlined in gold. Pressing Enter takes the first suggestion.",
+    "The box finds the cards whose words match yours. It does not write an answer of its own."
+  ] },
+  { title: "Tables and Downloads", items: [
+    "Every chart and figure has a **⊞ Table** button that shows the numbers behind it. Press **◫ Chart** to go back.",
+    "**⇩ CSV** saves the numbers on that card as a file that opens in Excel or any other spreadsheet program.",
+    "**⇩ Download All Data (CSV)**, at the top of the page, saves every dataset behind the dashboard in one file, with one value per row."
+  ] },
+  { title: "What the Numbers Mean", items: [
+    "No euro amounts are shown. Results are percentages, ratios or counts.",
+    "An error on a single policy is given as a percentage of the average policy's value. So an error of 26% is about a quarter of the average policy's value.",
+    "An error on a total is given as a percentage of that total.",
+    "Every model is scored against the heavy model: the insurer's full actuarial model, whose results are taken as correct.",
+    "Unless a card says otherwise, each model was scored on policies or scenarios it had not seen while it was being trained. That is what “out of fold”, “held out” and “unseen” mean on these pages.",
+    "References such as \xA75.3 point to sections of the paper. Where this page and the paper differ, the paper is the one to follow."
+  ] },
+  { title: "What the Error Measures Mean", items: [
+    "**MAE**: the average size of a miss, whichever way it goes. Lower is better.",
+    "**RMSE**: like MAE, but large misses count for more. Lower is better.",
+    "**MAPE**: the average miss as a percentage of the number being estimated. Lower is better.",
+    "**R\xB2**: how much of the ups and downs the model explains, from 0 (no better than guessing the average) to 1 (perfect). Higher is better.",
+    "**Relative Bias**: how far the model's total is from the heavy model's total, as a percentage. Closer to zero is better, whether above or below."
+  ] }
+];
+function howBits(s) {
+  return s.split(/\*\*(.+?)\*\*/).map((x, i) => i % 2 ? /* @__PURE__ */ React.createElement("b", { key: i, style: { whiteSpace: "nowrap" } }, x) : /* @__PURE__ */ React.createElement(React.Fragment, { key: i }, gloss(x)));
+}
+function HowTo() {
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(SectionTitle, { title: "How to Use This Dashboard — A Short Guide", sub: "What each part of the page does, and how to read the numbers." }), /* @__PURE__ */ React.createElement("div", { className: "grid g2" }, HOW_TO.map((c) => /* @__PURE__ */ React.createElement(Card, { key: c.title, title: c.title }, /* @__PURE__ */ React.createElement("ul", { className: "tkr", style: { fontSize: 13 } }, c.items.map((s, i) => /* @__PURE__ */ React.createElement("li", { key: i }, howBits(s))))))));
+}
+const ASK_ALL = ASK_INDEX.concat(HOW_TO.flatMap((c) => c.items.map((s) => ({ title: c.title, card: c.title, text: s.replace(/\*\*/g, ""), tab: "howto", where: "How to Use" }))), EXPERIMENTS.map((x, i) => ({ title: "Experiment: " + x.name, card: i + 1 + ". " + x.name, text: x.res, tab: "experiments:" + i, where: "By Experiment" })), [{ title: "Actual against predicted annual profit over 20 years", text: "Held-out scenarios: Gradient Boosting tracked the curve; the LSMC Polynomial missed the early-year fall yet its discounted total was within 2% - the discounted total hid a year-by-year profile that did not follow the actual one.", tab: "pvfp:1", where: "PVFP \u25B8 Revenue Account (Annual)" }], SCORECARD.map((r) => ({ card: "Which Model Was Most Accurate Where", title: "Which model was the most accurate: " + r[0], text: "White box " + r[1] + "; tree ensemble " + r[2] + "; Neural Network " + r[3], tab: "choice", where: "Model Choice" })), NN_WHY.map((r) => ({ card: "Why the Neural Network Was Not the Most Accurate", title: "Why the Neural Network was not the most accurate: " + r[0], text: r[1], tab: "choice", where: "Model Choice" })), WHEN_FULL.map((r) => ({ card: "When to Run the Heavy Model", title: "When to run the heavy model: " + r[0], text: r[1] + " (" + r[2] + ")", tab: "governance", where: "Adoption Matrix" })));
 const ASK_DOCS = ASK_ALL.map((e, i) => {
   const tt = askTok(e.title), tx = askTok(e.text);
   return { e, card: i < ASK_INDEX.length, toks: tt.concat(tt, tx) };
@@ -3334,7 +3533,8 @@ const TABS = [
     { label: "Assumption Drivers (Across Scenarios)", el: /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Explain, null), /* @__PURE__ */ React.createElement("div", { style: { marginTop: 18 } }, /* @__PURE__ */ React.createElement(RevenueLevers, null))) },
     { label: "Policy Features (Across Policies)", el: /* @__PURE__ */ React.createElement(ExplainPolicy, null) }
   ] }) },
-  { id: "governance", label: "Adoption Matrix", el: /* @__PURE__ */ React.createElement(Governance, null) }
+  { id: "governance", label: "Adoption Matrix", el: /* @__PURE__ */ React.createElement(Governance, null) },
+  { id: "howto", label: "How to Use", el: /* @__PURE__ */ React.createElement(HowTo, null) }
 ];
 const OF_REG = [
   { "s": "\xA75.1", "e": "Per-policy BEL", "m": "Decision Tree", "q": "R\xB2", "tr": "0.730", "te": "0.706", "o": "out of fold (5 folds)" },
